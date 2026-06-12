@@ -40,9 +40,9 @@ export default function LoginPage() {
       </section>
 
       {/* Right Side: Authentication Canvas */}
-      <section className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 lg:p-16 bg-surface">
+      <section className="flex-1 flex flex-col items-center justify-center md:justify-start md:pt-24 p-6 md:px-12 lg:px-16 bg-surface">
         
-        <div className="w-full max-w-md bg-surface-container-lowest rounded-2xl p-8 md:p-10 shadow-[0_16px_40px_-12px_rgba(46,125,50,0.08)] relative z-10 border border-outline-variant/20">
+        <div className="w-full max-w-md bg-surface-container-lowest rounded-2xl p-8 md:p-10 shadow-[0_16px_40px_-12px_rgba(46,125,50,0.08)] relative z-10 border border-outline-variant/20 -mt-8 md:mt-0">
           
           <div className="text-center mb-8">
             <h2 className="font-headline-lg text-3xl font-bold text-on-surface mb-2">Welcome Back</h2>
@@ -119,24 +119,6 @@ export default function LoginPage() {
             </div>
           </form>
 
-          {/* Divider */}
-          <div className="mt-8 flex items-center gap-4">
-            <div className="flex-1 h-px bg-outline-variant/30"></div>
-            <span className="font-label-sm text-xs font-bold text-on-surface-variant uppercase tracking-wider">Or continue with</span>
-            <div className="flex-1 h-px bg-outline-variant/30"></div>
-          </div>
-
-          {/* Social Logins */}
-          <div className="mt-6 grid grid-cols-2 gap-4">
-            <button className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-surface-container-lowest border border-outline-variant/50 hover:bg-surface-container-low transition-colors text-sm font-bold text-on-surface">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-              Google
-            </button>
-            <button className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-surface-container-lowest border border-outline-variant/50 hover:bg-surface-container-low transition-colors text-sm font-bold text-on-surface">
-              <img src="https://www.svgrepo.com/show/448234/microsoft.svg" alt="Microsoft" className="w-5 h-5" />
-              Microsoft
-            </button>
-          </div>
         </div>
       </section>
     </div>
