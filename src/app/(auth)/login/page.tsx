@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react'
 import { login, signup } from './actions'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [loginState, loginAction, isLoginPending] = useActionState(async (prevState: any, formData: FormData) => {
@@ -70,7 +71,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <label htmlFor="password" className="block font-label-md text-sm font-bold text-on-surface-variant">Password</label>
-                <a href="#" className="font-label-sm text-xs font-bold text-primary hover:text-secondary transition-colors">Forgot password?</a>
+                <Link href="/forgot-password" className="font-label-sm text-xs font-bold text-primary hover:text-secondary transition-colors">Forgot password?</Link>
               </div>
               <div className="relative">
                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">lock</span>
