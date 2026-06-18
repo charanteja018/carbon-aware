@@ -1,6 +1,8 @@
 import { getDashboardData } from '@/app/actions/emissions'
 import { TrendChart, BreakdownChart } from '@/components/charts/DashboardCharts'
 
+export const dynamic = 'force-dynamic'
+
 export default async function InsightsPage() {
   const { emissions } = await getDashboardData()
 

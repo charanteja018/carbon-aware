@@ -3,6 +3,8 @@ import { TrendChart, BreakdownChart } from '@/components/charts/DashboardCharts'
 
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 export default async function DashboardPage({ searchParams }: { searchParams: { filter?: string } }) {
   const { emissions, profile } = await getDashboardData()
   const filter = searchParams.filter || 'week'
@@ -29,6 +31,46 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     acc[log.category] = (acc[log.category] || 0) + Number(log.amount_kg_co2)
     return acc
   }, { Transport: 0, Food: 0, Electricity: 0, Purchases: 0 })
+
+  // Calculate Streak
+  const uniqueDates = Array.from(new Set(emissions.map((e: any) => e.logged_date))).sort((a: any, b: any) => new Date(b).getTime() - new Date(a).getTime());
+  
+  let currentStreak = 0;
+  const today = new Date().toISOString().split('T')[0];
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  
+  if (uniqueDates.length > 0 && (uniqueDates[0] === today || uniqueDates[0] === yesterday)) {
+    currentStreak = 1;
+    let expectedDate = new Date(uniqueDates[0] as string);
+    for (let i = 1; i < uniqueDates.length; i++) {
+      expectedDate.setDate(expectedDate.getDate() - 1);
+      const expectedDateStr = expectedDate.toISOString().split('T')[0];
+      if (uniqueDates[i] === expectedDateStr) {
+        currentStreak++;
+      } else {
+        break;
+      }
+    }
+  }
+
+  // Determine highest category for AI Coach
+  let highestCategory = 'None';
+  let highestValue = 0;
+  for (const [category, value] of Object.entries(breakdown)) {
+    if ((value as number) > highestValue) {
+      highestValue = value as number;
+      highestCategory = category;
+    }
+  }
+
+  const coachTips: Record<string, string> = {
+    'Transport': 'Your transport emissions are your biggest contributor. Consider replacing two car trips with biking or public transit this week to save an estimated 12kg of CO2.',
+    'Food': 'Diet forms the largest part of your footprint right now. Swapping one beef-heavy meal for a plant-based alternative can save ~10kg CO2.',
+    'Electricity': 'Home energy is your top emission source. Lowering your thermostat by 1°C or unplugging idle devices could trim your footprint by up to 5%.',
+    'Purchases': 'Shopping adds up quickly! Try buying second-hand or repairing items to cut your purchase emissions significantly.',
+    'None': 'Log some activities to get personalized AI coaching recommendations!'
+  };
+  const coachMessage = coachTips[highestCategory] || coachTips['None'];
 
   const score = profile?.green_score || 0
 
@@ -70,8 +112,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
 
             <div className="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-tertiary space-y-1">
               <p className="font-label-sm text-on-surface-variant uppercase tracking-wider">Streak</p>
-              <h3 className="font-headline-md text-headline-md text-tertiary truncate">{filteredEmissions.length > 0 ? 'Active' : 'None'}</h3>
-              <p className="font-label-sm text-on-surface-variant truncate">Keep Logging!</p>
+              <h3 className="font-headline-md text-headline-md text-tertiary truncate">{currentStreak} {currentStreak === 1 ? 'Day' : 'Days'}</h3>
+              <p className="font-label-sm text-on-surface-variant truncate">{currentStreak > 0 ? 'Keep it going!' : 'Log today to start!'}</p>
             </div>
           </section>
 
@@ -81,11 +123,15 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
               <div className="relative z-10 space-y-3">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-secondary-fixed">auto_awesome</span>
-                  <h2 className="font-headline-md text-headline-md text-surface-bright">Your Carbon Story</h2>
+                  <h2 className="font-headline-md text-headline-md text-surface-bright">AI Carbon Coach</h2>
                 </div>
                 <p className="font-body-md text-body-md text-primary-fixed leading-relaxed max-w-xl">
-                    You have logged {filteredEmissions.length} activities this {filter}. Transport emissions total {breakdown.Transport.toFixed(1)}kg. Continue making smart choices to improve your score!
+                    You have logged {filteredEmissions.length} activities this {filter}.
                 </p>
+                <div className="bg-surface-container-lowest/10 p-4 rounded-xl border border-surface-bright/20 mt-2">
+                  <p className="font-body-md font-bold text-surface-bright mb-1">Coach Recommendation:</p>
+                  <p className="text-primary-fixed">{coachMessage}</p>
+                </div>
                 <div className="pt-4 overflow-hidden rounded-xl h-48">
                   <img 
                     alt="Sustainable lifestyle" 

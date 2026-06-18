@@ -1,5 +1,7 @@
 import { getLeaderboardData, getDashboardData } from '@/app/actions/emissions'
 
+export const dynamic = 'force-dynamic'
+
 export default async function LeaderboardPage() {
   const { profiles, currentUserId } = await getLeaderboardData()
   const { emissions, profile: currentUserProfile } = await getDashboardData()

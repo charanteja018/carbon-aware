@@ -7,10 +7,14 @@ import { createClient } from '@/lib/supabase/server'
 export async function login(formData: FormData) {
   const supabase = await createClient()
 
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
+  if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+    return { error: 'Invalid credentials format' }
   }
+
+  const data = { email, password }
 
   const { error } = await supabase.auth.signInWithPassword(data)
 
@@ -25,10 +29,14 @@ export async function login(formData: FormData) {
 export async function signup(formData: FormData) {
   const supabase = await createClient()
 
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
+  if (!email || !password || typeof email !== 'string' || typeof password !== 'string' || password.length < 6) {
+    return { error: 'Invalid format. Password must be at least 6 characters.' }
   }
+
+  const data = { email, password }
 
   const { error } = await supabase.auth.signUp(data)
 

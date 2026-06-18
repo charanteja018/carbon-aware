@@ -35,17 +35,18 @@ export async function updateSession(request: NextRequest) {
     (route) => request.nextUrl.pathname.startsWith(route)
   )
 
-  if (
-    !user &&
-    isProtectedRoute
-  ) {
+  const isAuthRoute = ['/login', '/forgot-password'].some((route) => 
+    request.nextUrl.pathname.startsWith(route)
+  )
+
+  if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
-  // If user is logged in and trying to access /login, redirect to dashboard
-  if (user && request.nextUrl.pathname.startsWith('/login')) {
+  // If user is logged in and trying to access auth pages, redirect to dashboard
+  if (user && isAuthRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
     return NextResponse.redirect(url)

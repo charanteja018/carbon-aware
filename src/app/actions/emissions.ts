@@ -17,8 +17,8 @@ export async function logEmission(formData: FormData) {
   const quantity = parseFloat(formData.get('quantity') as string)
   const dateStr = formData.get('date') as string || new Date().toISOString().split('T')[0]
 
-  if (!activityType || isNaN(quantity)) {
-    throw new Error('Invalid input.')
+  if (!activityType || isNaN(quantity) || quantity <= 0 || quantity > 10000) {
+    throw new Error('Invalid input. Quantity must be greater than 0 and less than 10000.')
   }
 
   const activityDef = ACTIVITY_MULTIPLIERS[activityType]
