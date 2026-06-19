@@ -3,10 +3,10 @@
 import { useEmissionsStore } from '@/lib/store'
 import { TrendChart, BreakdownChart } from '@/components/charts/DashboardCharts'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 
-export default function DashboardPage() {
+function DashboardContent() {
   const searchParams = useSearchParams()
   const { emissions, profile } = useEmissionsStore()
   const [mounted, setMounted] = useState(false)
@@ -268,5 +268,17 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   )
 }
