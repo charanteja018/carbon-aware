@@ -1,15 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { logEmission } from '@/app/actions/emissions'
+import { useEmissionsStore } from '@/lib/store'
 import { ACTIVITY_MULTIPLIERS } from '@/lib/constants'
+import Link from 'next/link'
 
 export default function ActivityPage() {
+  const { logEmission } = useEmissionsStore()
   const [activityType, setActivityType] = useState('Car (Gasoline)')
   const [quantity, setQuantity] = useState(15)
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0])
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [successMsg, setSuccessMsg] = useState('')
+  const [successData, setSuccessData] = useState<{ activityType: string, quantity: number, totalCo2e: number, pointsAwarded: number } | null>(null)
 
   const currentDef = ACTIVITY_MULTIPLIERS[activityType]
   const estimatedImpact = currentDef ? (currentDef.multiplier * (quantity || 0)).toFixed(1) : '0.0'
@@ -17,18 +19,20 @@ export default function ActivityPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setIsSubmitting(true)
-    setSuccessMsg('')
+    setSuccessData(null)
 
     try {
-      const formData = new FormData()
-      formData.append('activity_type', activityType)
-      formData.append('quantity', quantity.toString())
-      formData.append('date', date)
-
-      const res = await logEmission(formData)
+      // Simulate slight network delay for emotional suspense
+      await new Promise(r => setTimeout(r, 600))
+      
+      const res = logEmission(activityType, quantity, date)
       if (res.success) {
-        setSuccessMsg(`Successfully logged! +${res.pointsAwarded} points.`)
-        // Optionally reset form
+        setSuccessData({
+          activityType,
+          quantity,
+          totalCo2e: res.amountKgCo2,
+          pointsAwarded: res.pointsAwarded
+        })
         setQuantity(0)
       }
     } catch (err: any) {
@@ -43,9 +47,119 @@ export default function ActivityPage() {
     setQuantity(qty)
   }
 
+  function closeResult() {
+    setSuccessData(null)
+  }
+
   return (
-    <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8">
-      {/* Header Section */}
+    <div className="relative min-h-screen">
+      {successData && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Dimming Background */}
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-md" onClick={closeResult}></div>
+          
+          {/* Footprint Animation Background */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+            <style dangerouslySetInnerHTML={{__html: `
+              @keyframes floatUp {
+                0% { transform: translateY(100vh) scale(0.5) rotate(-15deg); opacity: 0; }
+                20% { opacity: ${successData.totalCo2e > 20 ? '0.3' : '0.8'}; }
+                100% { transform: translateY(-100px) scale(1.5) rotate(15deg); opacity: 0; }
+              }
+              .footprint {
+                position: absolute;
+                color: ${successData.totalCo2e > 20 ? 'rgba(186, 26, 26, 0.6)' : 'rgba(13, 99, 27, 0.6)'};
+                pointer-events: none;
+                animation: floatUp 4s ease-in forwards;
+                font-size: 4rem;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .footprint { animation: none; display: none; }
+              }
+            `}} />
+            {[...Array(successData.totalCo2e > 20 ? 24 : 12)].map((_, i) => (
+              <span 
+                key={i} 
+                className="material-symbols-outlined footprint" 
+                style={{
+                  left: `${Math.random() * 90 + 5}%`,
+                  animationDelay: `${Math.random() * 1.5}s`,
+                  animationDuration: `${Math.random() * 2 + 3}s`,
+                  transform: `scale(${Math.random() * 0.5 + 0.8})`
+                }}
+              >
+                footprint
+              </span>
+            ))}
+          </div>
+
+          {/* Result Modal Content */}
+          <div className={`relative z-10 w-full max-w-lg rounded-3xl p-8 shadow-2xl animate-[fadeIn_0.3s_ease-out] ${successData.totalCo2e > 20 ? 'bg-error text-white' : 'bg-surface-container-lowest text-on-surface'}`}>
+            <button onClick={closeResult} className={`absolute top-6 right-6 ${successData.totalCo2e > 20 ? 'text-white/70 hover:text-white' : 'text-on-surface-variant hover:text-on-surface'}`}>
+              <span className="material-symbols-outlined text-3xl">close</span>
+            </button>
+
+            <div className="text-center space-y-6">
+              <span className="material-symbols-outlined text-6xl">
+                {successData.totalCo2e > 50 ? 'warning' : successData.totalCo2e > 20 ? 'priority_high' : 'eco'}
+              </span>
+              
+              <div>
+                <h2 className="font-headline-lg font-bold mb-2">Activity Logged</h2>
+                <div className="flex items-end justify-center gap-2">
+                  <span className="font-display-lg text-6xl font-bold">+{successData.totalCo2e.toFixed(1)}</span>
+                  <span className="text-2xl font-bold mb-2 opacity-80">kg CO2</span>
+                </div>
+              </div>
+
+              {successData.totalCo2e > 50 ? (
+                <div className="bg-black/20 p-4 rounded-xl border border-white/20 text-left">
+                  <h4 className="font-bold mb-2 flex items-center gap-2"><span className="material-symbols-outlined">public</span> Severe Impact Warning</h4>
+                  <p className="text-sm opacity-90">Emissions of this scale actively accelerate global warming. This single activity represents more carbon than some individuals generate in a month. Please explore alternatives immediately.</p>
+                </div>
+              ) : successData.totalCo2e > 20 ? (
+                <div className="bg-black/20 p-4 rounded-xl border border-white/20 text-left">
+                  <h4 className="font-bold mb-2 flex items-center gap-2"><span className="material-symbols-outlined">trending_up</span> High Impact</h4>
+                  <p className="text-sm opacity-90">This is a significant emission event. Consider offsetting this impact by reducing your travel or adopting a plant-based diet for the next few days.</p>
+                </div>
+              ) : (
+                <div className="bg-primary/10 p-4 rounded-xl border border-primary/20 text-left">
+                  <h4 className="font-bold text-primary mb-2 flex items-center gap-2"><span className="material-symbols-outlined">psychology</span> Positive Choice</h4>
+                  <p className="text-sm text-on-surface-variant">Sustainable choices like this are exactly what the planet needs. Keep maintaining a low-carbon lifestyle!</p>
+                </div>
+              )}
+
+              <div className={`text-sm text-left p-4 rounded-xl border ${successData.totalCo2e > 20 ? 'bg-black/10 border-white/10' : 'bg-surface-container-low border-outline-variant/30'}`}>
+                <p className={`font-mono text-xs mb-1 ${successData.totalCo2e > 20 ? 'text-white/80' : 'text-on-surface-variant'}`}>
+                  Calculation: {successData.quantity} {ACTIVITY_MULTIPLIERS[successData.activityType]?.unit} × {ACTIVITY_MULTIPLIERS[successData.activityType]?.multiplier}
+                </p>
+                <p className={`text-xs flex items-center gap-1 ${successData.totalCo2e > 20 ? 'text-white/80' : 'text-on-surface-variant'}`}>
+                  <span className="material-symbols-outlined text-xs">info</span>
+                  Source: {ACTIVITY_MULTIPLIERS[successData.activityType]?.source}
+                </p>
+              </div>
+              
+              {successData.pointsAwarded > 0 && (
+                <p className={`font-bold text-lg ${successData.totalCo2e > 20 ? 'text-white' : 'text-primary'}`}>
+                  Green Choice! +{successData.pointsAwarded} pts.
+                </p>
+              )}
+
+              <div className="pt-4 flex gap-4">
+                <Link href="/dashboard" className={`flex-1 font-bold py-3 rounded-xl transition-colors ${successData.totalCo2e > 20 ? 'bg-white text-error hover:bg-white/90' : 'bg-primary text-white hover:bg-secondary'}`}>
+                  View Dashboard
+                </Link>
+                <button onClick={closeResult} className={`flex-1 font-bold py-3 rounded-xl transition-colors ${successData.totalCo2e > 20 ? 'border-2 border-white/30 text-white hover:bg-white/10' : 'bg-surface-container-high text-on-surface hover:bg-surface-container-highest'}`}>
+                  Log Another
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="relative z-10 max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
+        {/* Header Section */}
       <section className="text-center md:text-left">
         <h1 className="font-headline-xl text-headline-xl text-primary mb-2">Log Your Activities</h1>
         <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
@@ -118,7 +232,7 @@ export default function ActivityPage() {
 
               {/* Distance Input */}
               <div>
-                <label className="block text-label-md font-bold text-on-surface-variant mb-2">Quantity ({currentDef?.category === 'Transport' ? 'Miles' : currentDef?.category === 'Food' ? 'Servings' : 'Hours'})</label>
+                <label className="block text-label-md font-bold text-on-surface-variant mb-2">Quantity ({currentDef?.category === 'Transport' ? 'Miles' : currentDef?.category === 'Food' ? 'Servings' : currentDef?.category === 'Purchases' ? 'Items' : 'Hours'})</label>
                 <div className="flex items-center gap-4">
                   <input 
                     type="number" 
@@ -145,12 +259,6 @@ export default function ActivityPage() {
                 </div>
               </div>
 
-              {successMsg && (
-                <div className="bg-primary/10 text-primary p-4 rounded-xl border border-primary/20 font-bold">
-                  {successMsg}
-                </div>
-              )}
-
               {/* Submit Button */}
               <button 
                 type="submit" 
@@ -158,7 +266,7 @@ export default function ActivityPage() {
                 className="w-full bg-primary hover:bg-secondary text-white font-bold py-4 rounded-xl shadow-md hover:shadow-primary/20 transition-all flex justify-center items-center gap-2 group disabled:opacity-50"
               >
                 <span className="material-symbols-outlined">{isSubmitting ? 'hourglass_empty' : 'add_circle'}</span>
-                <span>{isSubmitting ? 'Logging...' : 'Log Activity'}</span>
+                <span>{isSubmitting ? 'Calculating Impact...' : 'Log Activity'}</span>
               </button>
             </form>
           </section>
@@ -166,6 +274,29 @@ export default function ActivityPage() {
 
         {/* Right Sidebar */}
         <div className="space-y-8">
+          {/* Impact Preview */}
+          <section className={`p-6 rounded-2xl shadow-lg transition-colors duration-500 ${parseFloat(estimatedImpact) > 50 ? 'bg-error text-white' : parseFloat(estimatedImpact) > 20 ? 'bg-[#d97706] text-white' : 'bg-primary-container text-white'}`}>
+            <h3 className="font-headline-md text-headline-md text-surface-bright mb-2 flex items-center gap-2">
+              <span className="material-symbols-outlined">
+                {parseFloat(estimatedImpact) > 50 ? 'warning' : 'info'}
+              </span>
+              Estimated Impact
+            </h3>
+            <p className={`font-body-md mb-6 ${parseFloat(estimatedImpact) > 20 ? 'text-white/90' : 'text-primary-fixed'}`}>
+              Logging this activity will add approximately:
+            </p>
+            <div className="flex items-end gap-2 mb-4">
+              <span className="font-display-lg text-5xl font-bold">{estimatedImpact}</span>
+              <span className="text-xl font-bold mb-1 opacity-80">kg CO2</span>
+            </div>
+            <div className="h-2 w-full bg-black/20 rounded-full overflow-hidden">
+              <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (parseFloat(estimatedImpact) / 20) * 100)}%` }}></div>
+            </div>
+            <p className={`text-xs mt-2 text-right ${parseFloat(estimatedImpact) > 20 ? 'text-white/90' : 'text-primary-fixed'}`}>
+              {parseFloat(estimatedImpact) > 20 ? 'Exceeds daily target of 20kg' : 'Within daily target of 20kg'}
+            </p>
+          </section>
+
           {/* Quick Add Suggestions */}
           <section className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/30">
             <h3 className="font-headline-md text-headline-md text-on-background mb-4">Quick Add</h3>
@@ -216,21 +347,8 @@ export default function ActivityPage() {
               </button>
             </div>
           </section>
-
-          {/* Impact Preview */}
-          <section className="bg-primary-container text-white p-6 rounded-2xl shadow-lg">
-            <h3 className="font-headline-md text-headline-md text-surface-bright mb-2">Estimated Impact</h3>
-            <p className="font-body-md text-primary-fixed mb-6">Logging this activity will add approximately:</p>
-            <div className="flex items-end gap-2 mb-4">
-              <span className="font-display-lg text-5xl font-bold">{estimatedImpact}</span>
-              <span className="text-xl font-bold mb-1 opacity-80">kg CO2</span>
-            </div>
-            <div className="h-2 w-full bg-black/20 rounded-full overflow-hidden">
-              <div className="h-full bg-secondary-fixed rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (parseFloat(estimatedImpact) / 20) * 100)}%` }}></div>
-            </div>
-            <p className="text-xs mt-2 text-primary-fixed text-right">Based on daily target of 20kg</p>
-          </section>
         </div>
+      </div>
       </div>
     </div>
   )

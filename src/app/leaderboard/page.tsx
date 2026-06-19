@@ -1,209 +1,142 @@
-import { getLeaderboardData, getDashboardData } from '@/app/actions/emissions'
+'use client'
 
-export const dynamic = 'force-dynamic'
+import { useEmissionsStore } from '@/lib/store'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
-export default async function LeaderboardPage() {
-  const { profiles, currentUserId } = await getLeaderboardData()
-  const { emissions, profile: currentUserProfile } = await getDashboardData()
+const STATIC_LEADERS = [
+  { id: '1', display_name: 'EcoWarrior99', green_score: 3420 },
+  { id: '2', display_name: 'SarahTheGreen', green_score: 2850 },
+  { id: '3', display_name: 'PlanetSaver', green_score: 2100 },
+  { id: '4', display_name: 'AlexV', green_score: 1840 },
+  { id: '5', display_name: 'TreeHugger', green_score: 1560 },
+  { id: '6', display_name: 'ClimateHero', green_score: 1200 },
+  { id: '7', display_name: 'GreenLife', green_score: 950 },
+  { id: '8', display_name: 'EarthFirst', green_score: 640 },
+  { id: '9', display_name: 'CarbonNinja', green_score: 410 },
+]
 
-  const totalKgSaved = emissions.reduce((sum: number, log: any) => {
-    // Just an example calculation for "saved" vs "emitted"
-    // For simplicity we just use the total logged or if it's 0 we count it as saved
-    if (Number(log.amount_kg_co2) === 0) return sum + 1.5 // approximate saving
-    return sum
-  }, 0)
+export default function LeaderboardPage() {
+  const { profile } = useEmissionsStore()
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-  const greenScore = currentUserProfile?.green_score || 0
-  const myRank = profiles.findIndex((p: any) => p.id === currentUserId) + 1
+  if (!mounted) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+    </div>
+  )
+
+  const userScore = profile?.green_score || 0
+  
+  const allLeaders = [
+    { id: 'me', display_name: 'You', green_score: userScore }
+  ].sort((a, b) => b.green_score - a.green_score)
+
+  const top3 = allLeaders.slice(0, 3)
+  const rest = allLeaders.slice(3, 10)
 
   return (
-    <div className="bg-background text-on-background font-body-md overflow-x-hidden pb-24">
-      {/* Hero Section */}
-      <section className="relative h-[420px] flex items-center justify-center overflow-hidden bg-primary/5">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80"></div>
-        <div className="relative z-10 px-margin-mobile text-center">
-          <h2 className="font-headline-lg-mobile md:font-headline-lg text-on-surface drop-shadow-md mb-2">Climate Impact Journey</h2>
-          <p className="font-body-md text-on-surface-variant max-w-md mx-auto mb-8">Every sustainable choice helps restore your world.</p>
-          
-          {/* Green Score Card */}
-          <div className="bg-surface/90 backdrop-blur-md p-6 rounded-xl shadow-[0_8px_24px_rgba(13,99,27,0.1)] border-b-4 border-secondary max-w-[360px] mx-auto transition-transform hover:-translate-y-1 cursor-pointer">
-            <div className="flex justify-between items-center mb-4">
-              <div className="text-left">
-                <span className="text-label-md text-on-surface-variant block uppercase tracking-wider">Green Score</span>
-                <span className="font-headline-xl text-4xl text-primary font-bold">{greenScore}</span>
-              </div>
-              <div className="h-12 w-px bg-outline-variant/50 mx-4"></div>
-              <div className="text-right">
-                <span className="text-label-md text-on-surface-variant block uppercase tracking-wider">Estimated Saved</span>
-                <span className="font-headline-md text-2xl text-secondary font-bold">{totalKgSaved.toFixed(1)}kg</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 bg-secondary-container/50 px-4 py-3 rounded-lg justify-center">
-              <span className="material-symbols-outlined text-primary">eco</span>
-              <span className="text-label-md text-on-secondary-container font-bold">
-                {greenScore > 100 ? 'Stage 3: Thriving Ecosystem' : (greenScore > 50 ? 'Stage 2: Growing Forest' : 'Stage 1: Planting Seeds')}
-              </span>
-            </div>
-          </div>
+    <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-12 animate-[fadeIn_0.5s_ease-out]">
+      <section className="w-full flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-outline-variant/30 pb-6">
+        <div className="max-w-2xl text-center md:text-left">
+          <h1 className="font-headline-xl text-headline-xl text-primary mb-4">Global Climate Leaders</h1>
+          <p className="font-body-lg text-body-lg text-on-surface-variant">
+            See who is making the biggest impact. Compete not just for points, but for a sustainable future. Every point is a kilogram of carbon kept out of the atmosphere.
+          </p>
         </div>
+        <Link href="/activity" className="shrink-0 bg-primary hover:bg-secondary text-white px-8 py-4 rounded-xl font-bold shadow-sm transition-all flex items-center justify-center gap-2 self-center md:self-end">
+          <span className="material-symbols-outlined">add_circle</span>
+          Earn Points
+        </Link>
       </section>
 
-      <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop space-y-12 -mt-8 relative z-20">
-        <div className="grid lg:grid-cols-2 gap-12">
-          
-          <div className="space-y-12">
-            {/* Streak Tracker */}
-            <section>
-              <h3 className="font-headline-md text-on-surface mb-4">Consistency Matters</h3>
-              <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-b-4 border-error-container hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-6 mb-6">
-                  <div className="w-16 h-16 bg-error-container rounded-full flex items-center justify-center">
-                    <span className="material-symbols-outlined text-error text-4xl">local_fire_department</span>
-                  </div>
-                  <div>
-                    <p className="font-headline-md text-on-surface">{emissions.length > 0 ? 'Active' : 'No logs yet'} Streak</p>
-                    <p className="text-on-surface-variant">Log activities to build your streak!</p>
-                  </div>
-                </div>
-                {/* Mock Calendar Heatmap */}
-                <div className="grid grid-cols-7 gap-2">
-                  {Array.from({ length: 28 }).map((_, i) => (
-                    <div 
-                      key={i} 
-                      className={`aspect-square rounded-md ${i < Math.min(14, emissions.length) ? 'bg-primary' : (i < 20 ? 'bg-surface-container-high' : 'bg-surface-container')}`}
-                      title={i < Math.min(14, emissions.length) ? 'Logged' : 'Future'}
-                    ></div>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* Badge Collection */}
-            <section>
-              <div className="flex justify-between items-end mb-4">
-                <h3 className="font-headline-md text-on-surface">Achievement Badges</h3>
-                <button className="text-label-md text-primary font-bold hover:underline">View All</button>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className={`bg-surface-container-lowest p-4 rounded-xl flex flex-col items-center text-center shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-b-4 border-primary-container hover:-translate-y-1 transition-transform cursor-pointer ${greenScore >= 20 ? '' : 'grayscale opacity-60'}`}>
-                  <div className="w-14 h-14 mb-3 rounded-full bg-secondary-container flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary text-3xl">steps</span>
-                  </div>
-                  <span className="text-sm font-bold leading-tight">First Green Step</span>
-                </div>
-                <div className={`bg-surface-container-lowest p-4 rounded-xl flex flex-col items-center text-center shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-b-4 border-primary-container hover:-translate-y-1 transition-transform cursor-pointer ${greenScore >= 50 ? '' : 'grayscale opacity-60'}`}>
-                  <div className="w-14 h-14 mb-3 rounded-full bg-secondary-container flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary text-3xl">commute</span>
-                  </div>
-                  <span className="text-sm font-bold leading-tight">Sustainable Traveler</span>
-                </div>
-                <div className={`bg-surface-container-lowest p-4 rounded-xl flex flex-col items-center text-center shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-b-4 border-primary-container hover:-translate-y-1 transition-transform cursor-pointer ${greenScore >= 100 ? '' : 'grayscale opacity-60'}`}>
-                  <div className="w-14 h-14 mb-3 rounded-full bg-surface-variant flex items-center justify-center">
-                    <span className="material-symbols-outlined text-on-surface-variant text-3xl">bolt</span>
-                  </div>
-                  <span className="text-sm font-bold leading-tight">Energy Saver</span>
-                </div>
-              </div>
-            </section>
-
-            {/* Impact Forest Card */}
-            <section>
-              <div className="bg-primary p-8 rounded-xl shadow-lg text-white relative overflow-hidden border border-primary-container hover:shadow-xl hover:shadow-primary/20 transition-shadow cursor-pointer">
-                <div className="absolute -right-8 -bottom-8 opacity-20 transform hover:scale-110 transition-transform duration-700">
-                  <span className="material-symbols-outlined text-[160px]">forest</span>
-                </div>
-                <div className="relative z-10 flex flex-col gap-4">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-headline-md">Impact Forest</h3>
-                    <span className="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-bold backdrop-blur-sm">Level {Math.floor(greenScore / 20) + 1}</span>
-                  </div>
-                  <div className="mt-4">
-                    <p className="font-headline-xl text-4xl font-bold mb-1">{Math.floor(greenScore / 20)} Trees</p>
-                    <p className="opacity-90">{greenScore > 100 ? 'Mini Forest Ecosystem' : 'Growing saplings'}</p>
-                  </div>
-                  <div className="w-full bg-black/20 h-3 rounded-full mt-2">
-                    <div className="h-full bg-white rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, (greenScore % 20) * 5)}%` }}></div>
-                  </div>
-                </div>
-              </div>
-            </section>
+      {/* Top 3 Podium */}
+      <section className="flex flex-col md:flex-row justify-center items-end gap-4 md:gap-8 pt-12 pb-8">
+        {/* Rank 2 */}
+        {top3[1] && (
+          <div className="order-2 md:order-1 flex flex-col items-center w-full md:w-1/4 hover-lift">
+            <div className="w-20 h-20 bg-surface-container-high rounded-full mb-4 flex items-center justify-center shadow-md relative">
+              <span className="material-symbols-outlined text-4xl text-on-surface-variant">person</span>
+            </div>
+            <div className="bg-surface-container-lowest border border-outline-variant/30 w-full rounded-t-2xl p-6 text-center shadow-[0_16px_40px_-12px_rgba(0,0,0,0.05)] h-40 flex flex-col justify-end relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-1 bg-[#C0C0C0]"></div>
+              <div className="absolute inset-0 bg-[#C0C0C0]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <h3 className="font-headline-md font-bold text-on-surface mb-1 truncate">{top3[1].display_name}</h3>
+              <p className="font-headline-sm text-primary font-bold">{top3[1].green_score} pts</p>
+              <div className="mt-2 text-[#C0C0C0] font-headline-lg opacity-50">2</div>
+            </div>
           </div>
+        )}
 
-          <div className="space-y-12">
-            {/* Leaderboard */}
-            <section>
-              <div className="bg-surface-container p-6 md:p-8 rounded-xl border-b-4 border-outline-variant/30">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="font-headline-md text-on-surface">Leaderboard</h3>
-                  {myRank > 0 && <div className="bg-primary text-white px-4 py-1 rounded-full text-sm font-bold">Rank #{myRank}</div>}
-                </div>
-                
-                <div className="space-y-4">
-                  {profiles.length === 0 ? (
-                    <div className="text-center text-on-surface-variant p-4">No users found. Start logging activities to be the first!</div>
-                  ) : (
-                    profiles.map((p: any, index: number) => {
-                      const isMe = p.id === currentUserId
-                      return (
-                        <div key={p.id} className={`flex items-center gap-4 p-3 rounded-lg border transition-colors ${isMe ? 'bg-primary/10 border-primary' : 'bg-surface-container-lowest border-outline-variant/20 hover:border-primary shadow-sm'}`}>
-                          <span className={`font-bold w-6 text-center text-lg ${isMe ? 'text-primary' : 'text-on-surface'}`}>{index + 1}</span>
-                          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${isMe ? 'bg-primary text-white' : 'bg-secondary-fixed-dim/50 text-secondary border border-secondary/20'}`}>
-                            {p.full_name ? p.full_name.substring(0,2).toUpperCase() : 'U'}
-                          </div>
-                          <span className={`flex-1 font-bold ${isMe ? 'text-primary' : 'text-on-surface'}`}>{isMe ? 'You' : (p.full_name || 'Anonymous')}</span>
-                          <span className="font-bold text-primary text-lg">{p.green_score}</span>
-                        </div>
-                      )
-                    })
-                  )}
-                </div>
-              </div>
-            </section>
-
-            {/* Challenges Section */}
-            <section>
-              <h3 className="font-headline-md text-on-surface mb-4">Weekly Green Challenges</h3>
-              <div className="space-y-4">
-                <div className="bg-surface-container-lowest p-5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-center gap-6 border-b-4 border-tertiary hover:-translate-y-1 transition-transform cursor-pointer">
-                  <div className="w-14 h-14 rounded-full bg-tertiary/10 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-tertiary text-3xl">directions_walk</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-bold text-on-surface text-lg">Walk Instead of Drive</p>
-                    <div className="flex items-center gap-4 mt-2">
-                      <div className="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
-                        <div className="w-2/3 h-full bg-tertiary rounded-full"></div>
-                      </div>
-                      <span className="text-sm font-bold text-on-surface-variant">2/3 Days</span>
-                    </div>
-                  </div>
-                  <button className="w-10 h-10 rounded-full hover:bg-tertiary/10 text-tertiary flex items-center justify-center transition-colors">
-                    <span className="material-symbols-outlined">chevron_right</span>
-                  </button>
-                </div>
-
-                <div className="bg-surface-container-lowest p-5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-center gap-6 border-b-4 border-secondary hover:-translate-y-1 transition-transform cursor-pointer">
-                  <div className="w-14 h-14 rounded-full bg-secondary/10 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-secondary text-3xl">eco</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-bold text-on-surface text-lg">Plant-Based Week</p>
-                    <div className="flex items-center gap-4 mt-2">
-                      <div className="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
-                        <div className="w-1/5 h-full bg-secondary rounded-full"></div>
-                      </div>
-                      <span className="text-sm font-bold text-on-surface-variant">1/5 Meals</span>
-                    </div>
-                  </div>
-                  <button className="w-10 h-10 rounded-full hover:bg-secondary/10 text-secondary flex items-center justify-center transition-colors">
-                    <span className="material-symbols-outlined">chevron_right</span>
-                  </button>
-                </div>
-              </div>
-            </section>
+        {/* Rank 1 */}
+        {top3[0] && (
+          <div className="order-1 md:order-2 flex flex-col items-center w-full md:w-1/3 hover-lift z-10">
+            <div className="w-28 h-28 bg-primary rounded-full mb-4 flex items-center justify-center shadow-lg shadow-primary/20 relative">
+              {top3[0].id === 'me' && <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs px-2 py-1 rounded-full font-bold">YOU</span>}
+              <span className="material-symbols-outlined text-5xl text-white">workspace_premium</span>
+            </div>
+            <div className="bg-surface-container-lowest border border-outline-variant/30 w-full rounded-t-2xl p-8 text-center shadow-[0_20px_50px_-12px_rgba(46,125,50,0.15)] h-48 flex flex-col justify-end relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-[#FFD700]"></div>
+              <div className="absolute inset-0 bg-[#FFD700]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <h3 className="font-headline-lg font-bold text-on-surface mb-1 truncate">{top3[0].display_name}</h3>
+              <p className="font-headline-md text-primary font-bold">{top3[0].green_score} pts</p>
+              <div className="mt-2 text-[#FFD700] font-headline-xl opacity-50 drop-shadow-md">1</div>
+            </div>
           </div>
-        </div>
-      </div>
+        )}
+
+        {/* Rank 3 */}
+        {top3[2] && (
+          <div className="order-3 flex flex-col items-center w-full md:w-1/4 hover-lift">
+            <div className="w-20 h-20 bg-surface-container-high rounded-full mb-4 flex items-center justify-center shadow-md relative">
+              <span className="material-symbols-outlined text-4xl text-on-surface-variant">person</span>
+            </div>
+            <div className="bg-surface-container-lowest border border-outline-variant/30 w-full rounded-t-2xl p-6 text-center shadow-[0_16px_40px_-12px_rgba(0,0,0,0.05)] h-32 flex flex-col justify-end relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-1 bg-[#CD7F32]"></div>
+              <div className="absolute inset-0 bg-[#CD7F32]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <h3 className="font-headline-md font-bold text-on-surface mb-1 truncate">{top3[2].display_name}</h3>
+              <p className="font-headline-sm text-primary font-bold">{top3[2].green_score} pts</p>
+              <div className="mt-2 text-[#CD7F32] font-headline-lg opacity-50">3</div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Rest of the Leaderboard */}
+      <section className="bg-surface-container-lowest rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 overflow-hidden min-h-[100px] flex items-center justify-center">
+        {rest.length === 0 ? (
+          <div className="p-8 text-center text-on-surface-variant">
+            <p className="font-bold text-lg mb-2">It's lonely at the top!</p>
+            <p>Invite your friends to compete for a sustainable future.</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-outline-variant/20 w-full">
+            {rest.map((leader, index) => (
+              <div 
+                key={leader.id} 
+                className="p-4 sm:p-6 flex items-center gap-4 hover:bg-surface-container-low transition-colors"
+              >
+                <div className="w-8 text-center font-bold text-on-surface-variant opacity-60">
+                  {index + 4}
+                </div>
+                <div className="w-10 h-10 bg-surface-container rounded-full flex items-center justify-center">
+                  <span className="material-symbols-outlined text-primary">eco</span>
+                </div>
+                <div className="flex-1 font-bold text-on-surface flex items-center gap-2">
+                  {leader.display_name}
+                </div>
+                <div className="font-bold text-primary text-lg">
+                  {leader.green_score} pts
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   )
 }

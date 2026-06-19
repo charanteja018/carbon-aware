@@ -1,24 +1,7 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { TrendChart } from '@/components/charts/DashboardCharts'
-import { getDashboardData } from '@/app/actions/emissions'
 
-export default async function LandingPage() {
-  const { emissions, profile } = await getDashboardData()
-  const isLoggedIn = !!profile
-  
-  const totalKgSaved = isLoggedIn 
-    ? emissions.reduce((sum: number, log: any) => Number(log.amount_kg_co2) === 0 ? sum + 1.5 : sum, 0)
-    : 1250
-    
-  const activeStreak = isLoggedIn
-    ? (emissions.length > 0 ? Math.min(14, emissions.length) : 0)
-    : 14
-    
-  const greenScore = isLoggedIn
-    ? (profile.green_score || 0)
-    : 85
-
+export default function LandingPage() {
   return (
     <>
       {/* Hero Section */}
@@ -34,22 +17,22 @@ export default async function LandingPage() {
         <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop grid md:grid-cols-2 gap-16 items-center">
           <div className="space-y-8 z-10">
             <h1 className="font-headline-xl text-headline-xl text-on-background leading-tight">
-              Understand Your <span className="text-primary">Carbon Footprint</span>. Create a Greener Future.
+              Understand Your <span className="text-primary">Carbon Footprint</span>. Experience the Impact.
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
-              Track your daily impact across transport, diet, and lifestyle. Join a community dedicated to precision progress and environmental restoration.
+              Every choice has a consequence. Track your daily actions across transport, diet, and lifestyle to see exactly how you shape the planet's future.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link href="/login" className="bg-primary hover:bg-secondary text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-primary/20 transition-all text-center">
-                Get Started
+              <Link href="/activity" className="bg-primary hover:bg-secondary text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-primary/20 transition-all text-center">
+                Calculate Your Impact
               </Link>
               <Link href="/dashboard" className="inline-block border-2 border-primary text-primary px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/5 transition-all text-center">
-                View Dashboard
+                View Live Dashboard
               </Link>
             </div>
           </div>
           <div className="relative group">
-            <div className="absolute -inset-4 bg-primary-fixed/20 blur-3xl rounded-full opacity-50 group-hover:opacity-70 transition-opacity"></div>
+            <div className="absolute -inset-4 bg-error/20 blur-3xl rounded-full opacity-50 group-hover:opacity-70 transition-opacity"></div>
             <img 
               alt="Sustainability Illustration" 
               className="relative w-full h-auto drop-shadow-2xl animate-[float_6s_ease-in-out_infinite]" 
@@ -64,9 +47,9 @@ export default async function LandingPage() {
       <section className="py-24 bg-surface-container-low/50">
         <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop">
           <div className="text-center mb-16 space-y-4">
-            <h2 className="font-headline-lg text-headline-lg text-on-background">Track What Matters</h2>
+            <h2 className="font-headline-lg text-headline-lg text-on-background">The Hidden Cost of Daily Life</h2>
             <p className="font-body-md text-on-surface-variant max-w-2xl mx-auto">
-              We break down your emissions into actionable categories, helping you visualize where you can make the biggest difference.
+              We break down the invisible emissions behind your everyday actions, exposing the reality of your carbon footprint.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -84,9 +67,9 @@ export default async function LandingPage() {
                   <h3 className="font-headline-md text-headline-md">Transport</h3>
                 </div>
               </div>
-              <p className="text-on-surface-variant font-body-md mb-4">Monitor travel emissions from daily commutes to international flights with high-fidelity tracking tools.</p>
+              <p className="text-on-surface-variant font-body-md mb-4">Your daily commute and air travel are leading drivers of climate change, contributing directly to extreme weather events.</p>
               <Link href="/insights" className="flex items-center text-primary font-bold gap-2 group-hover:gap-4 transition-all cursor-pointer">
-                View Details <span className="material-symbols-outlined">arrow_forward</span>
+                View Insights <span className="material-symbols-outlined">arrow_forward</span>
               </Link>
             </div>
 
@@ -101,12 +84,12 @@ export default async function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="font-headline-md text-headline-md">Food</h3>
+                  <h3 className="font-headline-md text-headline-md">Diet & Agriculture</h3>
                 </div>
               </div>
-              <p className="text-on-surface-variant font-body-md mb-4">Understand the dietary impact of your meals. From farm to fork, we calculate the carbon intensity of your food choices.</p>
+              <p className="text-on-surface-variant font-body-md mb-4">High-impact diets demand vast land and water, accelerating deforestation and disrupting global food security.</p>
               <Link href="/insights" className="flex items-center text-primary font-bold gap-2 group-hover:gap-4 transition-all cursor-pointer">
-                View Details <span className="material-symbols-outlined">arrow_forward</span>
+                View Insights <span className="material-symbols-outlined">arrow_forward</span>
               </Link>
             </div>
 
@@ -121,12 +104,12 @@ export default async function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="font-headline-md text-headline-md">Electricity</h3>
+                  <h3 className="font-headline-md text-headline-md">Energy Grid</h3>
                 </div>
               </div>
-              <p className="text-on-surface-variant font-body-md mb-4">Track household energy consumption and integrate with smart meters to optimize your home's efficiency.</p>
+              <p className="text-on-surface-variant font-body-md mb-4">Fossil-fuel heavy grids poison local air quality. Monitor your energy usage to lower your reliance on dirty energy.</p>
               <Link href="/insights" className="flex items-center text-primary font-bold gap-2 group-hover:gap-4 transition-all cursor-pointer">
-                View Details <span className="material-symbols-outlined">arrow_forward</span>
+                View Insights <span className="material-symbols-outlined">arrow_forward</span>
               </Link>
             </div>
 
@@ -141,12 +124,12 @@ export default async function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="font-headline-md text-headline-md">Purchases</h3>
+                  <h3 className="font-headline-md text-headline-md">Consumption</h3>
                 </div>
               </div>
-              <p className="text-on-surface-variant font-body-md mb-4">Measure lifestyle emissions by analyzing the supply chain of your purchases and favoring low-waste brands.</p>
+              <p className="text-on-surface-variant font-body-md mb-4">From fast fashion to new electronics, overconsumption creates staggering manufacturing emissions and waste.</p>
               <Link href="/insights" className="flex items-center text-primary font-bold gap-2 group-hover:gap-4 transition-all cursor-pointer">
-                View Details <span className="material-symbols-outlined">arrow_forward</span>
+                View Insights <span className="material-symbols-outlined">arrow_forward</span>
               </Link>
             </div>
           </div>
@@ -158,43 +141,44 @@ export default async function LandingPage() {
         <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop">
           <div className="grid lg:grid-cols-3 gap-8 mb-16">
             <div className="bg-primary-container p-8 rounded-2xl text-on-primary-container shadow-[0_16px_40px_-12px_rgba(46,125,50,0.08)] hover-lift">
-              <span className="material-symbols-outlined text-4xl mb-4">eco</span>
-              <h4 className="text-label-md font-label-md uppercase tracking-widest opacity-80 mb-2">Total Impact</h4>
-              <div className="text-4xl font-headline-lg">{typeof totalKgSaved === 'number' && totalKgSaved % 1 !== 0 ? totalKgSaved.toFixed(1) : totalKgSaved} {isLoggedIn ? 'kg' : 'kg'} <span className="text-lg opacity-80">CO2 Saved</span></div>
+              <span className="material-symbols-outlined text-4xl mb-4">public</span>
+              <h4 className="text-label-md font-label-md uppercase tracking-widest opacity-80 mb-2">Global Emergency</h4>
+              <div className="text-4xl font-headline-lg text-error">1.5°C <span className="text-lg opacity-80 text-on-primary-container">Warming Limit Risk</span></div>
             </div>
 
             <div className="bg-secondary p-8 rounded-2xl text-white shadow-[0_16px_40px_-12px_rgba(46,125,50,0.08)] hover-lift">
-              <span className="material-symbols-outlined text-4xl mb-4">bolt</span>
-              <h4 className="text-label-md font-label-md uppercase tracking-widest opacity-80 mb-2">Efficiency</h4>
-              <div className="text-4xl font-headline-lg">{activeStreak} Days <span className="text-lg opacity-80">Sustainable Streak</span></div>
+              <span className="material-symbols-outlined text-4xl mb-4">water_drop</span>
+              <h4 className="text-label-md font-label-md uppercase tracking-widest opacity-80 mb-2">Resource Depletion</h4>
+              <div className="text-4xl font-headline-lg">2 Billion <span className="text-lg opacity-80">Face Water Scarcity</span></div>
             </div>
 
             <div className="bg-tertiary-container p-8 rounded-2xl text-on-tertiary-container shadow-[0_16px_40px_-12px_rgba(46,125,50,0.08)] hover-lift">
-              <span className="material-symbols-outlined text-4xl mb-4">grade</span>
-              <h4 className="text-label-md font-label-md uppercase tracking-widest opacity-80 mb-2">Status</h4>
-              <div className="text-4xl font-headline-lg">{greenScore} <span className="text-lg opacity-80">Green Score</span></div>
+              <span className="material-symbols-outlined text-4xl mb-4">forest</span>
+              <h4 className="text-label-md font-label-md uppercase tracking-widest opacity-80 mb-2">Biodiversity</h4>
+              <div className="text-4xl font-headline-lg text-error">1 Million <span className="text-lg opacity-80 text-on-tertiary-container">Species at Risk</span></div>
             </div>
           </div>
 
           <div className="glass-card rounded-3xl p-8 md:p-12 shadow-[0_16px_40px_-12px_rgba(46,125,50,0.08)]">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
               <div>
-                <h3 className="font-headline-lg text-headline-lg">Monthly Progress</h3>
-                <p className="text-on-surface-variant">Carbon reduction trend over the last 6 months</p>
+                <h3 className="font-headline-lg text-headline-lg">The Time to Act is Now</h3>
+                <p className="text-on-surface-variant">Global carbon emissions trajectory must peak immediately to avoid irreversible damage.</p>
               </div>
               <div className="flex gap-2">
-                <span className="px-4 py-1 bg-primary/10 text-primary rounded-full text-sm font-semibold">2024 Year to Date</span>
+                <span className="px-4 py-1 bg-error/10 text-error rounded-full text-sm font-semibold">Critical State</span>
               </div>
             </div>
 
             <div className="relative h-64 w-full">
+              {/* Dummy global trend data for awareness */}
               <TrendChart data={[
-                { name: 'Jan', kg: 1400 },
-                { name: 'Feb', kg: 1350 },
-                { name: 'Mar', kg: 1250 },
-                { name: 'Apr', kg: 1100 },
-                { name: 'May', kg: 950 },
-                { name: 'Jun', kg: 800 },
+                { name: '2019', kg: 36.8 },
+                { name: '2020', kg: 34.8 },
+                { name: '2021', kg: 36.3 },
+                { name: '2022', kg: 36.8 },
+                { name: '2023', kg: 37.4 },
+                { name: '2024', kg: 38.0 },
               ]} />
             </div>
           </div>

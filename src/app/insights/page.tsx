@@ -1,13 +1,25 @@
-import { getDashboardData } from '@/app/actions/emissions'
+'use client'
+
+import { useEmissionsStore } from '@/lib/store'
 import { TrendChart, BreakdownChart } from '@/components/charts/DashboardCharts'
+import { useState, useEffect } from 'react'
 
-export const dynamic = 'force-dynamic'
+export default function InsightsPage() {
+  const { emissions } = useEmissionsStore()
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-export default async function InsightsPage() {
-  const { emissions } = await getDashboardData()
+  if (!mounted) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+    </div>
+  )
 
-  const totalKg = emissions.reduce((sum: number, log: any) => sum + Number(log.amount_kg_co2), 0)
-  const breakdown = emissions.reduce((acc: any, log: any) => {
+  const totalKg = emissions.reduce((sum, log) => sum + Number(log.amount_kg_co2), 0)
+  const breakdown = emissions.reduce((acc: any, log) => {
     acc[log.category] = (acc[log.category] || 0) + Number(log.amount_kg_co2)
     return acc
   }, { Transport: 0, Food: 0, Electricity: 0, Purchases: 0 })
@@ -26,7 +38,7 @@ export default async function InsightsPage() {
     trendDataMap.set(monthName, 0)
   }
 
-  emissions.forEach((log: any) => {
+  emissions.forEach((log) => {
     const d = new Date(log.logged_date)
     const monthDiff = (now.getFullYear() - d.getFullYear()) * 12 + now.getMonth() - d.getMonth()
     if (monthDiff >= 0 && monthDiff < 6) {
@@ -40,7 +52,7 @@ export default async function InsightsPage() {
   const trendData = Array.from(trendDataMap.entries()).map(([name, kg]) => ({ name, kg }))
 
   return (
-    <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8">
+    <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
       <section className="text-center md:text-left">
         <h1 className="font-headline-xl text-headline-xl text-primary mb-2">Deep Insights</h1>
         <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
@@ -91,7 +103,7 @@ export default async function InsightsPage() {
             </div>
             
             <p className="font-label-sm text-on-surface-variant p-4 bg-surface-container-low rounded-xl italic border-l-2 border-primary">
-              "Your footprint decreased by 12% this month. Reduced transport emissions contributed the most to this improvement."
+              "Every peak in this chart represents real environmental cost. Pay attention to sudden spikes in your emissions."
             </p>
           </section>
 
@@ -100,21 +112,21 @@ export default async function InsightsPage() {
             <div className="relative z-10">
               <h2 className="font-headline-md text-headline-md text-surface-bright flex items-center gap-2">
                 <span className="material-symbols-outlined text-secondary-fixed">tips_and_updates</span>
-                Smart Recommendations
+                Critical Improvements
               </h2>
               <ul className="space-y-4 mt-6">
                 <li className="flex items-start gap-4 transform hover:translate-x-2 transition-transform cursor-pointer">
                   <span className="material-symbols-outlined text-secondary-fixed mt-1">check_circle</span>
                   <div>
                     <h4 className="font-bold text-lg text-primary-fixed">Switch to Renewable Energy</h4>
-                    <p className="opacity-90">Switching your home energy provider could save you up to 30% of your total footprint.</p>
+                    <p className="opacity-90">Switching your home energy provider could save you up to 30% of your total footprint immediately.</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4 transform hover:translate-x-2 transition-transform cursor-pointer">
                   <span className="material-symbols-outlined text-secondary-fixed mt-1">check_circle</span>
                   <div>
                     <h4 className="font-bold text-lg text-primary-fixed">Optimize Commute</h4>
-                    <p className="opacity-90">Working from home one more day a week will save approximately 8kg CO2.</p>
+                    <p className="opacity-90">Working from home one more day a week prevents approximately 8kg CO2 from entering the atmosphere.</p>
                   </div>
                 </li>
               </ul>

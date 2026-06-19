@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
-import { createClient } from '@/lib/supabase/server'
-import { logout } from '@/app/(auth)/login/actions'
 
 export const metadata: Metadata = {
   title: "CarbonAware | Understand Your Carbon Footprint",
   description: "Track your daily impact across transport, diet, and lifestyle.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -31,23 +27,15 @@ export default async function RootLayout({
               <span>CarbonAware</span>
             </Link>
             <div className="hidden md:flex items-center gap-8 font-body-md font-medium">
-              <Link href="/dashboard" className="text-on-surface-variant hover:text-primary transition-colors">Dashboard</Link>
-              <Link href="/activity" className="text-on-surface-variant hover:text-primary transition-colors">Log Activity</Link>
-              <Link href="/insights" className="text-on-surface-variant hover:text-primary transition-colors">Insights</Link>
+              <Link href="/dashboard" className="text-on-surface-variant hover:text-primary transition-colors">Live Dashboard</Link>
+              <Link href="/activity" className="text-on-surface-variant hover:text-primary transition-colors">Calculate Impact</Link>
+              <Link href="/insights" className="text-on-surface-variant hover:text-primary transition-colors">Global Insights</Link>
               <Link href="/leaderboard" className="text-on-surface-variant hover:text-primary transition-colors">Leaderboard</Link>
             </div>
             <div className="flex items-center gap-4">
-              {user ? (
-                <form action={logout}>
-                  <button className="text-primary font-bold hover:text-secondary transition-colors">
-                    Log Out
-                  </button>
-                </form>
-              ) : (
-                <Link href="/login" className="text-primary font-bold hover:text-secondary transition-colors">
-                  Sign In
-                </Link>
-              )}
+               <Link href="/activity" className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-xl font-bold shadow-sm hover:shadow-primary/20 transition-all hidden md:block">
+                  Log Activity
+               </Link>
             </div>
           </div>
         </nav>
