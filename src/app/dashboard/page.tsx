@@ -52,7 +52,6 @@ function DashboardContent() {
   const uniqueDates = Array.from(new Set(emissions.map((e) => e.logged_date))).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
   
   let currentStreak = 0;
-  // eslint-disable-next-line react-hooks/purity
   const today = new Date().toISOString().split('T')[0];
   // eslint-disable-next-line react-hooks/purity
   const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
