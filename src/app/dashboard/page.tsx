@@ -105,7 +105,7 @@ function DashboardContent() {
   return (
     <main className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
       {/* Header Content */}
-      <section className="space-y-2 max-w-2xl mx-auto text-center md:text-left md:mx-0">
+      <section className="space-y-2 max-w-2xl text-left">
         <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Live Carbon Tracker</h1>
         <p className="font-body-md text-body-md text-on-surface-variant">Track your carbon footprint and actively reduce emissions to protect biodiversity and prevent severe climate tipping points.</p>
         <p className="text-xs font-bold text-on-surface-variant opacity-70 flex items-center gap-1 mt-1">

@@ -177,7 +177,7 @@ export default function ActivityPage() {
 
       <div className="relative z-10 max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
         {/* Header Section */}
-      <section className="text-center md:text-left">
+      <section className="text-left">
         <h1 className="font-headline-xl text-headline-xl text-primary mb-2">Log Your Activities</h1>
         <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
           Track your daily actions to see their real-time impact on your carbon footprint. Every small choice adds up.

@@ -16,6 +16,11 @@ export interface UserProfile {
   green_score: number
 }
 
+/**
+ * Represents the global state and actions for the carbon emission tracking application.
+ * Manages user profiles, historical emission logs, and provides robust mathematical bounds
+ * for recording new environmental activities safely.
+ */
 interface AppState {
   emissions: EmissionLog[]
   profile: UserProfile
@@ -71,6 +76,15 @@ export const useEmissionsStore = create<AppState>()(
     (set) => ({
       emissions: getDemoEmissions(),
       profile: { green_score: 145 },
+      /**
+       * Securely validates and logs a new carbon activity into the local datastore.
+       * 
+       * @param activityType - The string identifier mapping to a known emission constant.
+       * @param quantity - The numerical magnitude of the activity (e.g., miles driven or items purchased).
+       * @param dateStr - ISO 8601 formatted date string for the activity.
+       * @throws {Error} If the activity is unknown, quantity is non-finite, out of bounds, or the date is in the future.
+       * @returns An object indicating success status and the calculated carbon footprint.
+       */
       logEmission: (activityType: string, quantity: number, dateStr: string) => {
         const activityDef = ACTIVITY_MULTIPLIERS[activityType]
         if (!activityDef) throw new Error('Unknown activity type')

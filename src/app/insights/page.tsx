@@ -59,7 +59,7 @@ export default function InsightsPage() {
 
   return (
     <main className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
-      <section className="text-center md:text-left">
+      <section className="text-left">
         <h1 className="font-headline-xl text-headline-xl text-primary mb-2">Deep Insights</h1>
         <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
           Analyze your carbon footprint trends and discover where you can make the biggest difference.

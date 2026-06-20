@@ -4,8 +4,9 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CarbonAware | Understand Your Carbon Footprint",
-  description: "Track your daily impact across transport, diet, and lifestyle.",
+  title: "Carbon Aware | Environmental Tracking",
+  description: "A comprehensive carbon footprint tracker designed to help individuals calculate, monitor, and reduce their environmental impact to support global biodiversity and climate action.",
+  keywords: "carbon footprint tracker, biodiversity, climate action, environmental sustainability, ESG software, Hack2Skill, emissions calculator",
 };
 
 export default function RootLayout({

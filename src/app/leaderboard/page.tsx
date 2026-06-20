@@ -33,7 +33,7 @@ export default function LeaderboardPage() {
   return (
     <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-12 animate-[fadeIn_0.5s_ease-out]">
       <section className="w-full flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-outline-variant/30 pb-6">
-        <div className="max-w-2xl text-center md:text-left">
+        <div className="max-w-2xl text-left">
           <h1 className="font-headline-xl text-headline-xl text-primary mb-4">Global Climate Leaders</h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant">
             See who is making the biggest impact. Compete not just for points, but for a sustainable future. Every point is a kilogram of carbon kept out of the atmosphere.
