@@ -63,12 +63,12 @@ export default function ActivityPage() {
             <style dangerouslySetInnerHTML={{__html: `
               @keyframes floatUp {
                 0% { transform: translateY(100vh) scale(0.5) rotate(-15deg); opacity: 0; }
-                20% { opacity: ${successData.totalCo2e > 20 ? '0.3' : '0.8'}; }
+                20% { opacity: ${successData.totalCo2e > 15 ? '0.3' : '0.8'}; }
                 100% { transform: translateY(-100px) scale(1.5) rotate(15deg); opacity: 0; }
               }
               .footprint {
                 position: absolute;
-                color: ${successData.totalCo2e > 20 ? 'rgba(186, 26, 26, 0.6)' : 'rgba(13, 99, 27, 0.6)'};
+                color: ${successData.totalCo2e > 15 ? 'rgba(186, 26, 26, 0.6)' : 'rgba(13, 99, 27, 0.6)'};
                 pointer-events: none;
                 animation: floatUp 4s ease-in forwards;
                 font-size: 4rem;
@@ -77,7 +77,7 @@ export default function ActivityPage() {
                 .footprint { animation: none; display: none; }
               }
             `}} />
-            {[...Array(successData.totalCo2e > 20 ? 24 : 12)].map((_, i) => (
+            {[...Array(successData.totalCo2e > 15 ? 24 : 12)].map((_, i) => (
               <span 
                 key={i} 
                 className="material-symbols-outlined footprint" 
@@ -94,14 +94,14 @@ export default function ActivityPage() {
           </div>
 
           {/* Result Modal Content */}
-          <div className={`relative z-10 w-full max-w-lg rounded-3xl p-8 shadow-2xl animate-[fadeIn_0.3s_ease-out] ${successData.totalCo2e > 20 ? 'bg-error text-white' : 'bg-surface-container-lowest text-on-surface'}`}>
-            <button onClick={closeResult} className={`absolute top-6 right-6 ${successData.totalCo2e > 20 ? 'text-white/70 hover:text-white' : 'text-on-surface-variant hover:text-on-surface'}`}>
+          <div className={`relative z-10 w-full max-w-lg rounded-3xl p-8 shadow-2xl animate-[fadeIn_0.3s_ease-out] ${successData.totalCo2e > 15 ? 'bg-error text-white' : 'bg-surface-container-lowest text-on-surface'}`}>
+            <button onClick={closeResult} className={`absolute top-6 right-6 ${successData.totalCo2e > 15 ? 'text-white/70 hover:text-white' : 'text-on-surface-variant hover:text-on-surface'}`}>
               <span className="material-symbols-outlined text-3xl">close</span>
             </button>
 
             <div className="text-center space-y-6">
               <span className="material-symbols-outlined text-6xl">
-                {successData.totalCo2e > 50 ? 'warning' : successData.totalCo2e > 20 ? 'priority_high' : 'eco'}
+                {successData.totalCo2e > 40 ? 'warning' : successData.totalCo2e > 15 ? 'priority_high' : 'eco'}
               </span>
               
               <div>
@@ -112,44 +112,44 @@ export default function ActivityPage() {
                 </div>
               </div>
 
-              {successData.totalCo2e > 50 ? (
+              {successData.totalCo2e > 40 ? (
                 <div className="bg-black/20 p-4 rounded-xl border border-white/20 text-left">
-                  <h4 className="font-bold mb-2 flex items-center gap-2"><span className="material-symbols-outlined">public</span> Severe Impact Warning</h4>
-                  <p className="text-sm opacity-90">Emissions of this scale actively accelerate global warming. This single activity represents more carbon than some individuals generate in a month. Please explore alternatives immediately.</p>
+                  <h4 className="font-bold mb-2 flex items-center gap-2"><span className="material-symbols-outlined">public</span> 2026 Severe Impact Warning</h4>
+                  <p className="text-sm opacity-90">Emissions at this scale directly accelerate ongoing extreme weather volatility. This single action consumes a massive portion of your remaining carbon budget. Please explore zero-emission alternatives immediately.</p>
                 </div>
-              ) : successData.totalCo2e > 20 ? (
+              ) : successData.totalCo2e > 15 ? (
                 <div className="bg-black/20 p-4 rounded-xl border border-white/20 text-left">
-                  <h4 className="font-bold mb-2 flex items-center gap-2"><span className="material-symbols-outlined">trending_up</span> High Impact</h4>
-                  <p className="text-sm opacity-90">This is a significant emission event. Consider offsetting this impact by reducing your travel or adopting a plant-based diet for the next few days.</p>
+                  <h4 className="font-bold mb-2 flex items-center gap-2"><span className="material-symbols-outlined">trending_up</span> High Impact Activity</h4>
+                  <p className="text-sm opacity-90">This is a significant emission event. As 2026 climate targets tighten, offsetting this impact by reducing meat consumption or adopting public transit for the week is critical.</p>
                 </div>
               ) : (
                 <div className="bg-primary/10 p-4 rounded-xl border border-primary/20 text-left">
-                  <h4 className="font-bold text-primary mb-2 flex items-center gap-2"><span className="material-symbols-outlined">psychology</span> Positive Choice</h4>
-                  <p className="text-sm text-on-surface-variant">Sustainable choices like this are exactly what the planet needs. Keep maintaining a low-carbon lifestyle!</p>
+                  <h4 className="font-bold text-primary mb-2 flex items-center gap-2"><span className="material-symbols-outlined">psychology</span> Climate Positive Choice</h4>
+                  <p className="text-sm text-on-surface-variant">By choosing low-emission options in 2026, you actively help preserve vulnerable ecosystems and freshwater sources. Keep it up!</p>
                 </div>
               )}
 
-              <div className={`text-sm text-left p-4 rounded-xl border ${successData.totalCo2e > 20 ? 'bg-black/10 border-white/10' : 'bg-surface-container-low border-outline-variant/30'}`}>
-                <p className={`font-mono text-xs mb-1 ${successData.totalCo2e > 20 ? 'text-white/80' : 'text-on-surface-variant'}`}>
+              <div className={`text-sm text-left p-4 rounded-xl border ${successData.totalCo2e > 15 ? 'bg-black/10 border-white/10' : 'bg-surface-container-low border-outline-variant/30'}`}>
+                <p className={`font-mono text-xs mb-1 ${successData.totalCo2e > 15 ? 'text-white/80' : 'text-on-surface-variant'}`}>
                   Calculation: {successData.quantity} {ACTIVITY_MULTIPLIERS[successData.activityType]?.unit} × {ACTIVITY_MULTIPLIERS[successData.activityType]?.multiplier}
                 </p>
-                <p className={`text-xs flex items-center gap-1 ${successData.totalCo2e > 20 ? 'text-white/80' : 'text-on-surface-variant'}`}>
+                <p className={`text-xs flex items-center gap-1 ${successData.totalCo2e > 15 ? 'text-white/80' : 'text-on-surface-variant'}`}>
                   <span className="material-symbols-outlined text-xs">info</span>
-                  Source: {ACTIVITY_MULTIPLIERS[successData.activityType]?.source}
+                  Data: {ACTIVITY_MULTIPLIERS[successData.activityType]?.source}
                 </p>
               </div>
               
               {successData.pointsAwarded > 0 && (
-                <p className={`font-bold text-lg ${successData.totalCo2e > 20 ? 'text-white' : 'text-primary'}`}>
+                <p className={`font-bold text-lg ${successData.totalCo2e > 15 ? 'text-white' : 'text-primary'}`}>
                   Green Choice! +{successData.pointsAwarded} pts.
                 </p>
               )}
 
               <div className="pt-4 flex gap-4">
-                <Link href="/dashboard" className={`flex-1 font-bold py-3 rounded-xl transition-colors ${successData.totalCo2e > 20 ? 'bg-white text-error hover:bg-white/90' : 'bg-primary text-white hover:bg-secondary'}`}>
+                <Link href="/dashboard" className={`flex-1 text-center font-bold py-3 rounded-xl transition-colors ${successData.totalCo2e > 15 ? 'bg-white text-error hover:bg-white/90' : 'bg-primary text-white hover:bg-secondary'}`}>
                   View Dashboard
                 </Link>
-                <button onClick={closeResult} className={`flex-1 font-bold py-3 rounded-xl transition-colors ${successData.totalCo2e > 20 ? 'border-2 border-white/30 text-white hover:bg-white/10' : 'bg-surface-container-high text-on-surface hover:bg-surface-container-highest'}`}>
+                <button onClick={closeResult} className={`flex-1 font-bold py-3 rounded-xl transition-colors ${successData.totalCo2e > 15 ? 'border-2 border-white/30 text-white hover:bg-white/10' : 'bg-surface-container-high text-on-surface hover:bg-surface-container-highest'}`}>
                   Log Another
                 </button>
               </div>
@@ -275,14 +275,14 @@ export default function ActivityPage() {
         {/* Right Sidebar */}
         <div className="space-y-8">
           {/* Impact Preview */}
-          <section className={`p-6 rounded-2xl shadow-lg transition-colors duration-500 ${parseFloat(estimatedImpact) > 50 ? 'bg-error text-white' : parseFloat(estimatedImpact) > 20 ? 'bg-[#d97706] text-white' : 'bg-primary-container text-white'}`}>
+          <section className={`p-6 rounded-2xl shadow-lg transition-colors duration-500 ${parseFloat(estimatedImpact) > 40 ? 'bg-error text-white' : parseFloat(estimatedImpact) > 15 ? 'bg-[#d97706] text-white' : 'bg-primary-container text-white'}`}>
             <h3 className="font-headline-md text-headline-md text-surface-bright mb-2 flex items-center gap-2">
               <span className="material-symbols-outlined">
-                {parseFloat(estimatedImpact) > 50 ? 'warning' : 'info'}
+                {parseFloat(estimatedImpact) > 40 ? 'warning' : 'info'}
               </span>
               Estimated Impact
             </h3>
-            <p className={`font-body-md mb-6 ${parseFloat(estimatedImpact) > 20 ? 'text-white/90' : 'text-primary-fixed'}`}>
+            <p className={`font-body-md mb-6 ${parseFloat(estimatedImpact) > 15 ? 'text-white/90' : 'text-primary-fixed'}`}>
               Logging this activity will add approximately:
             </p>
             <div className="flex items-end gap-2 mb-4">
@@ -290,10 +290,10 @@ export default function ActivityPage() {
               <span className="text-xl font-bold mb-1 opacity-80">kg CO2</span>
             </div>
             <div className="h-2 w-full bg-black/20 rounded-full overflow-hidden">
-              <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (parseFloat(estimatedImpact) / 20) * 100)}%` }}></div>
+              <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (parseFloat(estimatedImpact) / 15) * 100)}%` }}></div>
             </div>
-            <p className={`text-xs mt-2 text-right ${parseFloat(estimatedImpact) > 20 ? 'text-white/90' : 'text-primary-fixed'}`}>
-              {parseFloat(estimatedImpact) > 20 ? 'Exceeds daily target of 20kg' : 'Within daily target of 20kg'}
+            <p className={`text-xs mt-2 text-right ${parseFloat(estimatedImpact) > 15 ? 'text-white/90' : 'text-primary-fixed'}`}>
+              {parseFloat(estimatedImpact) > 15 ? 'Exceeds strict 15kg daily target' : 'Within 15kg daily target'}
             </p>
           </section>
 

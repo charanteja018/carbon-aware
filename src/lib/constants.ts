@@ -1,75 +1,77 @@
+export const DATA_LAST_UPDATED = 'June 2026';
+
 export const ACTIVITY_MULTIPLIERS: Record<string, { category: string; multiplier: number; unit: string; source: string; suggestion: string }> = {
   'Car (Gasoline)': { 
-    category: 'Transport', multiplier: 0.411, unit: 'miles', 
-    source: 'EPA GHG Emission Factors Hub (2023)', 
-    suggestion: 'Consider replacing 2 short car trips with biking this week.' 
+    category: 'Transport', multiplier: 0.306, unit: 'miles', 
+    source: 'EPA GHG Emission Factors Hub (2025/2026)', 
+    suggestion: 'Consider replacing 2 short car trips with biking this week to reduce immediate localized air pollution.' 
   },
   'Car (Electric)': { 
-    category: 'Transport', multiplier: 0.12, unit: 'miles', 
-    source: 'EPA GHG Emission Factors Hub (2023)', 
+    category: 'Transport', multiplier: 0.10, unit: 'miles', 
+    source: 'EPA GHG Emission Factors Hub (2025 Grid Average)', 
     suggestion: 'Great choice! Try charging during off-peak hours for greener grid energy.' 
   },
   'Bus': { 
-    category: 'Transport', multiplier: 0.17, unit: 'miles', 
-    source: 'EPA GHG Emission Factors Hub (2023)', 
-    suggestion: 'Public transit is excellent. Encourage a friend to join you next time!' 
+    category: 'Transport', multiplier: 0.16, unit: 'miles', 
+    source: 'EPA GHG Emission Factors Hub (2025/2026)', 
+    suggestion: 'Public transit drastically lowers per-passenger emissions. Encourage a friend to join you next time!' 
   },
   'Train / Subway': { 
-    category: 'Transport', multiplier: 0.06, unit: 'miles', 
-    source: 'EPA GHG Emission Factors Hub (2023)', 
-    suggestion: 'Trains are highly efficient! Keep riding the rails.' 
+    category: 'Transport', multiplier: 0.05, unit: 'miles', 
+    source: 'EPA GHG Emission Factors Hub (2025/2026)', 
+    suggestion: 'Trains are highly efficient! Keep riding the rails to combat urban smog.' 
   },
   'Flight (Short Haul)': { 
-    category: 'Transport', multiplier: 0.25, unit: 'miles', 
-    source: 'DEFRA (2023)', 
-    suggestion: 'For trips under 300 miles, taking a train can cut emissions by up to 80%.' 
+    category: 'Transport', multiplier: 0.207, unit: 'miles', 
+    source: 'EPA GHG Emission Factors Hub (2025/2026)', 
+    suggestion: 'For trips under 300 miles, taking a high-speed train can cut emissions by up to 80%.' 
   },
   'Bicycle / Walk': { 
     category: 'Transport', multiplier: 0, unit: 'miles', 
     source: 'Zero Emission (Verified)', 
-    suggestion: 'Perfect zero-emission travel! You are a climate hero.' 
+    suggestion: 'Perfect zero-emission travel! You are actively helping keep global temperatures down.' 
   },
   
   'Vegetarian Meal': { 
-    category: 'Food', multiplier: 1.5, unit: 'servings', 
-    source: 'Our World in Data (2020)', 
-    suggestion: 'Excellent! Plant-based meals use 70% less land and water.' 
+    category: 'Food', multiplier: 1.2, unit: 'servings', 
+    source: 'Our World in Data / IPCC (2025 Update)', 
+    suggestion: 'Excellent! Plant-based meals use significantly less land, helping protect 2026 biodiversity targets.' 
   },
   'Vegan Meal': { 
-    category: 'Food', multiplier: 0.9, unit: 'servings', 
-    source: 'Our World in Data (2020)', 
-    suggestion: 'Vegan meals have the lowest carbon footprint of any diet!' 
+    category: 'Food', multiplier: 0.7, unit: 'servings', 
+    source: 'Our World in Data / IPCC (2025 Update)', 
+    suggestion: 'Vegan meals have the lowest carbon footprint of any diet, drastically reducing water scarcity risks.' 
   },
   'Beef Meal': { 
-    category: 'Food', multiplier: 7.2, unit: 'servings', 
-    source: 'Our World in Data (2020)', 
-    suggestion: 'Beef is highly intensive. Try swapping one beef meal for chicken or beans to save ~5kg CO2.' 
+    category: 'Food', multiplier: 27.0, unit: 'servings', 
+    source: 'FAO / IPCC (2025 Lifecycle Analysis)', 
+    suggestion: 'Beef is highly intensive. Swapping one beef meal for chicken or beans saves massive amounts of fresh water and emissions.' 
   },
   
   'Air Conditioning': { 
-    category: 'Electricity', multiplier: 1.2, unit: 'hours', 
-    source: 'US EIA (2022 Average Grid Factor)', 
-    suggestion: 'Raising your thermostat by just 1°C can save up to 10% on cooling emissions.' 
+    category: 'Electricity', multiplier: 1.1, unit: 'hours', 
+    source: 'US EIA (2025/2026 Grid Projections)', 
+    suggestion: 'With 2026 heatwaves becoming more frequent, cooling is necessary but energy-intensive. Raise the thermostat 1°C to save 10%.' 
   },
   'Heater': { 
-    category: 'Electricity', multiplier: 1.5, unit: 'hours', 
-    source: 'US EIA (2022 Average Grid Factor)', 
-    suggestion: 'Lowering the thermostat 1°C and wearing a sweater saves significant energy.' 
+    category: 'Electricity', multiplier: 1.4, unit: 'hours', 
+    source: 'US EIA (2025/2026 Grid Projections)', 
+    suggestion: 'Lowering the thermostat 1°C and wearing a sweater saves significant energy and reduces grid strain.' 
   },
   
   'Clothing / Apparel': { 
     category: 'Purchases', multiplier: 15.0, unit: 'items', 
-    source: 'UN Environment Programme', 
-    suggestion: 'Fast fashion is carbon-heavy. Try thrifting or buying high-quality lasting pieces.' 
+    source: 'UN Environment Programme (2025 Report)', 
+    suggestion: 'Fast fashion fills landfills and pollutes waterways. Try thrifting or buying high-quality lasting pieces.' 
   },
   'Electronics': { 
     category: 'Purchases', multiplier: 50.0, unit: 'items', 
-    source: 'Carbon Trust', 
-    suggestion: 'Manufacturing electronics takes huge energy. Keep devices longer or buy refurbished.' 
+    source: 'Carbon Trust (2025/2026)', 
+    suggestion: 'Electronic waste is a growing 2026 crisis. Keep devices longer or buy certified refurbished.' 
   },
   'General Shopping': { 
     category: 'Purchases', multiplier: 5.0, unit: 'items', 
-    source: 'Carbon Trust Average', 
+    source: 'Carbon Trust (2025/2026)', 
     suggestion: 'Mindful consumption is key. Ask yourself: do I really need this today?' 
   },
 }

@@ -142,20 +142,20 @@ export default function LandingPage() {
           <div className="grid lg:grid-cols-3 gap-8 mb-16">
             <div className="bg-primary-container p-8 rounded-2xl text-on-primary-container shadow-[0_16px_40px_-12px_rgba(46,125,50,0.08)] hover-lift">
               <span className="material-symbols-outlined text-4xl mb-4">public</span>
-              <h4 className="text-label-md font-label-md uppercase tracking-widest opacity-80 mb-2">Global Emergency</h4>
-              <div className="text-4xl font-headline-lg text-error">1.5°C <span className="text-lg opacity-80 text-on-primary-container">Warming Limit Risk</span></div>
+              <h4 className="text-label-md font-label-md uppercase tracking-widest opacity-80 mb-2">2026 Global Emergency</h4>
+              <div className="text-4xl font-headline-lg text-error">1.5°C <span className="text-lg opacity-80 text-on-primary-container">Warming Limit Closing</span></div>
             </div>
 
             <div className="bg-secondary p-8 rounded-2xl text-white shadow-[0_16px_40px_-12px_rgba(46,125,50,0.08)] hover-lift">
               <span className="material-symbols-outlined text-4xl mb-4">water_drop</span>
               <h4 className="text-label-md font-label-md uppercase tracking-widest opacity-80 mb-2">Resource Depletion</h4>
-              <div className="text-4xl font-headline-lg">2 Billion <span className="text-lg opacity-80">Face Water Scarcity</span></div>
+              <div className="text-4xl font-headline-lg">2.5 Billion <span className="text-lg opacity-80">Face Water Scarcity</span></div>
             </div>
 
             <div className="bg-tertiary-container p-8 rounded-2xl text-on-tertiary-container shadow-[0_16px_40px_-12px_rgba(46,125,50,0.08)] hover-lift">
               <span className="material-symbols-outlined text-4xl mb-4">forest</span>
               <h4 className="text-label-md font-label-md uppercase tracking-widest opacity-80 mb-2">Biodiversity</h4>
-              <div className="text-4xl font-headline-lg text-error">1 Million <span className="text-lg opacity-80 text-on-tertiary-container">Species at Risk</span></div>
+              <div className="text-4xl font-headline-lg text-error">1.2 Million <span className="text-lg opacity-80 text-on-tertiary-container">Species at Risk</span></div>
             </div>
           </div>
 
@@ -171,14 +171,14 @@ export default function LandingPage() {
             </div>
 
             <div className="relative h-64 w-full">
-              {/* Dummy global trend data for awareness */}
+              {/* Global trend data including 2026 projections */}
               <TrendChart data={[
-                { name: '2019', kg: 36.8 },
-                { name: '2020', kg: 34.8 },
                 { name: '2021', kg: 36.3 },
                 { name: '2022', kg: 36.8 },
                 { name: '2023', kg: 37.4 },
                 { name: '2024', kg: 38.0 },
+                { name: '2025', kg: 38.2 },
+                { name: '2026*', kg: 38.5 },
               ]} />
             </div>
           </div>

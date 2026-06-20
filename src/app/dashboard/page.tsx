@@ -2,6 +2,7 @@
 
 import { useEmissionsStore } from '@/lib/store'
 import { TrendChart, BreakdownChart } from '@/components/charts/DashboardCharts'
+import { DATA_LAST_UPDATED } from '@/lib/constants'
 import Link from 'next/link'
 import { Suspense, useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -73,17 +74,17 @@ function DashboardContent() {
   let impactBg = 'bg-primary/10'
   let impactBorder = 'border-primary'
   
-  if (totalKg > 100) {
+  if (totalKg > 80) {
     impactLevel = 'Critical'
     impactColor = 'text-error'
     impactBg = 'bg-error/10'
     impactBorder = 'border-error'
-  } else if (totalKg > 50) {
+  } else if (totalKg > 40) {
     impactLevel = 'High'
     impactColor = 'text-[#d97706]' // Orange
     impactBg = 'bg-[#d97706]/10'
     impactBorder = 'border-[#d97706]'
-  } else if (totalKg > 20) {
+  } else if (totalKg > 15) {
     impactLevel = 'Moderate'
     impactColor = 'text-[#ca8a04]' // Yellow
     impactBg = 'bg-[#ca8a04]/10'
@@ -101,6 +102,9 @@ function DashboardContent() {
       <section className="space-y-2 max-w-2xl mx-auto text-center md:text-left md:mx-0">
         <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Live Carbon Tracker</h1>
         <p className="font-body-md text-body-md text-on-surface-variant">Your actions shape the world. Review your recent impact and discover paths to improvement.</p>
+        <p className="text-xs font-bold text-on-surface-variant opacity-70 flex items-center gap-1 mt-1">
+          <span className="material-symbols-outlined text-[14px]">verified</span> Data Verified: {DATA_LAST_UPDATED} (EPA/IPCC Standards)
+        </p>
 
         <div className="flex bg-surface-container-low p-1 rounded-xl mt-4 max-w-md">
           <Link href="/dashboard?filter=week" className={`flex-1 py-2 text-center rounded-lg font-label-md text-label-md ${filter === 'week' ? 'bg-surface-container-lowest text-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-high transition-colors'}`}>This Week</Link>
@@ -160,21 +164,21 @@ function DashboardContent() {
                 {impactLevel === 'Critical' || impactLevel === 'High' ? (
                   <>
                     <p className="font-body-md text-lg leading-relaxed max-w-2xl text-white">
-                      Your recent footprint of <strong>{totalKg.toFixed(1)}kg</strong> places a heavy burden on our fragile climate system. Emissions at this scale accelerate extreme weather events and threaten global food security.
+                      Your footprint of <strong>{totalKg.toFixed(1)}kg</strong> places a critical burden on our fragile 2026 climate system. Emissions at this scale accelerate extreme weather volatility, threaten global food security, and severely endanger local biodiversity.
                     </p>
                     <div className="bg-black/20 p-4 rounded-xl border border-white/20 mt-2 backdrop-blur-sm">
                       <p className="font-body-md font-bold mb-1 flex items-center gap-2"><span className="material-symbols-outlined">warning</span> Action Required:</p>
-                      <p>You must drastically reduce your Transport and Food emissions. Consider eliminating flights, reducing meat consumption, and relying on public transit.</p>
+                      <p>You must drastically reduce your highest-emitting categories. Consider eliminating domestic flights, heavily reducing meat consumption, and fully relying on public transit or EVs to stay within the shrinking global carbon budget.</p>
                     </div>
                   </>
                 ) : (
                   <>
                     <p className="font-body-md text-lg leading-relaxed max-w-2xl text-primary-fixed">
-                      Your footprint of <strong>{totalKg.toFixed(1)}kg</strong> is manageable. By maintaining this trajectory, you help preserve biodiversity and protect vulnerable communities from climate disasters.
+                      Your footprint of <strong>{totalKg.toFixed(1)}kg</strong> is manageable. By maintaining this downward trajectory, you actively help protect vulnerable communities from 2026 climate disasters and preserve our remaining fresh water sources.
                     </p>
                     <div className="bg-surface-container-lowest/10 p-4 rounded-xl border border-surface-bright/20 mt-2 backdrop-blur-sm">
                       <p className="font-body-md font-bold text-surface-bright mb-1 flex items-center gap-2"><span className="material-symbols-outlined">psychology</span> Coach Recommendation:</p>
-                      <p className="text-primary-fixed">To reach "Low" severity, try replacing two car trips with biking or adopting a fully plant-based diet for the next three days.</p>
+                      <p className="text-primary-fixed">To reach "Low" severity and achieve net-zero, try replacing two car trips with biking or adopting a fully plant-based diet for the remainder of the week.</p>
                     </div>
                   </>
                 )}

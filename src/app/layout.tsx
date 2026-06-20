@@ -59,7 +59,7 @@ export default function RootLayout({
               <a className="text-on-surface-variant hover:text-secondary hover:underline decoration-secondary/30 transition-colors" href="#">Resources</a>
             </div>
             <div className="text-body-sm text-on-surface-variant opacity-80">
-                2024 CarbonAware. Together for a Low-Carbon Future.
+                2026 CarbonAware. Together for a Low-Carbon Future.
             </div>
           </div>
         </footer>

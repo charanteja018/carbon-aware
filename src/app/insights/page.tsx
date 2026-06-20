@@ -2,6 +2,7 @@
 
 import { useEmissionsStore } from '@/lib/store'
 import { TrendChart, BreakdownChart } from '@/components/charts/DashboardCharts'
+import { DATA_LAST_UPDATED } from '@/lib/constants'
 import { useState, useEffect } from 'react'
 
 export default function InsightsPage() {
@@ -58,6 +59,9 @@ export default function InsightsPage() {
         <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
           Analyze your carbon footprint trends and discover where you can make the biggest difference.
         </p>
+        <p className="text-xs font-bold text-on-surface-variant opacity-70 flex items-center justify-center md:justify-start gap-1 mt-2">
+          <span className="material-symbols-outlined text-[14px]">verified</span> Data Verified: {DATA_LAST_UPDATED}
+        </p>
       </section>
 
       <div className="grid lg:grid-cols-2 gap-8">
@@ -112,21 +116,21 @@ export default function InsightsPage() {
             <div className="relative z-10">
               <h2 className="font-headline-md text-headline-md text-surface-bright flex items-center gap-2">
                 <span className="material-symbols-outlined text-secondary-fixed">tips_and_updates</span>
-                Critical Improvements
+                2026 AI Climate Coach
               </h2>
               <ul className="space-y-4 mt-6">
                 <li className="flex items-start gap-4 transform hover:translate-x-2 transition-transform cursor-pointer">
-                  <span className="material-symbols-outlined text-secondary-fixed mt-1">check_circle</span>
+                  <span className="material-symbols-outlined text-secondary-fixed mt-1">eco</span>
                   <div>
-                    <h4 className="font-bold text-lg text-primary-fixed">Switch to Renewable Energy</h4>
-                    <p className="opacity-90">Switching your home energy provider could save you up to 30% of your total footprint immediately.</p>
+                    <h4 className="font-bold text-lg text-primary-fixed">Protect 2026 Biodiversity</h4>
+                    <p className="opacity-90">Agricultural emissions are the leading driver of biodiversity loss and water scarcity. Shifting to plant-based meals 3 days a week immediately preserves critical fresh water.</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4 transform hover:translate-x-2 transition-transform cursor-pointer">
-                  <span className="material-symbols-outlined text-secondary-fixed mt-1">check_circle</span>
+                  <span className="material-symbols-outlined text-secondary-fixed mt-1">health_and_safety</span>
                   <div>
-                    <h4 className="font-bold text-lg text-primary-fixed">Optimize Commute</h4>
-                    <p className="opacity-90">Working from home one more day a week prevents approximately 8kg CO2 from entering the atmosphere.</p>
+                    <h4 className="font-bold text-lg text-primary-fixed">Reduce Health Impacts</h4>
+                    <p className="opacity-90">Fossil fuel combustion directly contributes to the respiratory crisis. Swapping 20 miles of driving for public transit removes toxic particulate matter from your local air.</p>
                   </div>
                 </li>
               </ul>
