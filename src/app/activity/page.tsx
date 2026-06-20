@@ -15,15 +15,20 @@ export default function ActivityPage() {
   const [successData, setSuccessData] = useState<{ activityType: string, quantity: number, totalCo2e: number, pointsAwarded: number } | null>(null)
 
   const currentDef = ACTIVITY_MULTIPLIERS[activityType]
-  const estimatedImpact = currentDef ? (currentDef.multiplier * (quantity || 0)).toFixed(1) : '0.0'
+  const safeQuantity = Number.isNaN(quantity) || !Number.isFinite(quantity) || quantity < 0 ? 0 : quantity
+  const estimatedImpact = currentDef ? (currentDef.multiplier * safeQuantity).toFixed(1) : '0.0'
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setErrorMsg(null)
     setSuccessData(null)
 
-    if (!quantity || quantity <= 0) {
-      setErrorMsg("Quantity must be greater than zero.")
+    if (typeof quantity !== 'number' || Number.isNaN(quantity) || quantity <= 0) {
+      setErrorMsg("Quantity must be a valid positive number.")
+      return
+    }
+    if (quantity > 100000) {
+      setErrorMsg("Quantity cannot exceed 100,000 to maintain system stability.")
       return
     }
 
@@ -248,10 +253,12 @@ export default function ActivityPage() {
                 <div className="flex items-center gap-4">
                   <input 
                     type="number" 
-                    value={quantity || ''}
-                    onChange={(e) => setQuantity(parseFloat(e.target.value))}
+                    value={Number.isNaN(quantity) ? '' : quantity}
+                    onChange={(e) => setQuantity(e.target.value ? parseFloat(e.target.value) : NaN)}
                     placeholder="e.g. 15" 
                     step="0.1"
+                    min="0.1"
+                    max="100000"
                     className="flex-1 bg-surface-container-low border border-outline-variant rounded-xl py-3 px-4 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   />
                 </div>
@@ -265,6 +272,7 @@ export default function ActivityPage() {
                   <input 
                     type="date" 
                     value={date}
+                    max={new Date().toISOString().split('T')[0]}
                     onChange={(e) => setDate(e.target.value)}
                     className="w-full bg-surface-container-low border border-outline-variant rounded-xl py-3 pl-12 pr-4 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   />

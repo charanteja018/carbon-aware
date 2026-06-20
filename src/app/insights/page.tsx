@@ -20,16 +20,20 @@ export default function InsightsPage() {
     </div>
   )
 
-  const totalKg = emissions.reduce((sum, log) => sum + Number(log.amount_kg_co2), 0)
+  const totalKg = emissions.reduce((sum, log) => {
+    const amount = Number(log.amount_kg_co2)
+    return sum + (Number.isNaN(amount) ? 0 : amount)
+  }, 0)
   const breakdown = emissions.reduce((acc: Record<string, number>, log) => {
-    acc[log.category] = (acc[log.category] || 0) + Number(log.amount_kg_co2)
+    const amount = Number(log.amount_kg_co2)
+    acc[log.category] = (acc[log.category] || 0) + (Number.isNaN(amount) ? 0 : amount)
     return acc
   }, { Transport: 0, Food: 0, Electricity: 0, Purchases: 0 })
 
-  const transportPercent = totalKg > 0 ? ((breakdown.Transport / totalKg) * 100).toFixed(0) : '0'
-  const foodPercent = totalKg > 0 ? ((breakdown.Food / totalKg) * 100).toFixed(0) : '0'
-  const electricityPercent = totalKg > 0 ? ((breakdown.Electricity / totalKg) * 100).toFixed(0) : '0'
-  const purchasesPercent = totalKg > 0 ? (((breakdown.Purchases || 0) / totalKg) * 100).toFixed(0) : '0'
+  const transportPercent = totalKg > 0 && Number.isFinite(totalKg) ? ((breakdown.Transport / totalKg) * 100).toFixed(0) : '0'
+  const foodPercent = totalKg > 0 && Number.isFinite(totalKg) ? ((breakdown.Food / totalKg) * 100).toFixed(0) : '0'
+  const electricityPercent = totalKg > 0 && Number.isFinite(totalKg) ? ((breakdown.Electricity / totalKg) * 100).toFixed(0) : '0'
+  const purchasesPercent = totalKg > 0 && Number.isFinite(totalKg) ? (((breakdown.Purchases || 0) / totalKg) * 100).toFixed(0) : '0'
 
   // Group emissions by month for the Trend Chart
   const trendDataMap = new Map<string, number>()

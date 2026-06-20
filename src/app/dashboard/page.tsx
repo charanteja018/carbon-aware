@@ -40,11 +40,15 @@ function DashboardContent() {
   }
 
   // Calculate total footprint
-  const totalKg = filteredEmissions.reduce((sum, log) => sum + Number(log.amount_kg_co2), 0)
+  const totalKg = filteredEmissions.reduce((sum, log) => {
+    const amount = Number(log.amount_kg_co2)
+    return sum + (Number.isNaN(amount) ? 0 : amount)
+  }, 0)
 
   // Calculate breakdown
   const breakdown = filteredEmissions.reduce((acc: Record<string, number>, log) => {
-    acc[log.category] = (acc[log.category] || 0) + Number(log.amount_kg_co2)
+    const amount = Number(log.amount_kg_co2)
+    acc[log.category] = (acc[log.category] || 0) + (Number.isNaN(amount) ? 0 : amount)
     return acc
   }, { Transport: 0, Food: 0, Electricity: 0, Purchases: 0 })
 
@@ -96,7 +100,7 @@ function DashboardContent() {
   const score = profile?.green_score || 0
 
   // Recovery Indicator (e.g. Trees needed to offset this week)
-  const treesNeeded = Math.ceil(totalKg / 2) // Assuming 1 tree offsets ~2kg a week roughly for demo
+  const treesNeeded = Number.isNaN(totalKg) || totalKg < 0 ? 0 : Math.ceil(totalKg / 2) // Assuming 1 tree offsets ~2kg a week roughly for demo
 
   return (
     <main className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">

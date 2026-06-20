@@ -21,7 +21,7 @@ export default function LeaderboardPage() {
     </div>
   )
 
-  const userScore = profile?.green_score || 0
+  const userScore = profile?.green_score && Number.isFinite(profile.green_score) ? profile.green_score : 0
   
   const allLeaders = [
     { id: 'me', display_name: 'You', green_score: userScore }

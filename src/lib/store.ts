@@ -74,6 +74,23 @@ export const useEmissionsStore = create<AppState>()(
       logEmission: (activityType: string, quantity: number, dateStr: string) => {
         const activityDef = ACTIVITY_MULTIPLIERS[activityType]
         if (!activityDef) throw new Error('Unknown activity type')
+        if (typeof quantity !== 'number' || Number.isNaN(quantity) || quantity <= 0) {
+          throw new Error('Quantity must be a positive finite number')
+        }
+        if (quantity > 100000) {
+          throw new Error('Quantity exceeds maximum allowed limit (100,000)')
+        }
+        const loggedDate = new Date(dateStr)
+        if (Number.isNaN(loggedDate.getTime())) {
+          throw new Error('Invalid date format')
+        }
+        
+        // Remove time component from now for strict date comparison
+        const today = new Date()
+        today.setHours(23, 59, 59, 999)
+        if (loggedDate > today) {
+          throw new Error('Cannot log activities in the future')
+        }
 
         const amountKgCo2 = activityDef.multiplier * quantity
         const description = `${activityType} (${quantity} ${activityDef.unit})`
