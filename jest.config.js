@@ -7,6 +7,12 @@ const createJestConfig = nextJest({
 
 const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
+  collectCoverageFrom: [
+    'src/app/**/*.{ts,tsx}',
+    'src/lib/**/*.{ts,tsx}',
+    'src/components/**/*.{ts,tsx}',
+    '!src/app/layout.tsx',
+  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^uuid$': '<rootDir>/__mocks__/uuid.js',
