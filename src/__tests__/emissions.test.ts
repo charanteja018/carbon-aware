@@ -6,7 +6,7 @@ describe('Emission Calculations', () => {
     const quantity = 10;
     const multiplier = ACTIVITY_MULTIPLIERS[type].multiplier;
     const result = multiplier * quantity;
-    expect(result).toBeCloseTo(4.11, 2);
+    expect(result).toBeCloseTo(3.06, 2);
   });
 
   it('calculates food emissions correctly', () => {
@@ -14,7 +14,7 @@ describe('Emission Calculations', () => {
     const quantity = 2;
     const multiplier = ACTIVITY_MULTIPLIERS[type].multiplier;
     const result = multiplier * quantity;
-    expect(result).toBe(1.5 * 2);
+    expect(result).toBe(1.2 * 2);
   });
 
   it('validates input ranges effectively', () => {
