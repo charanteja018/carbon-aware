@@ -11,6 +11,7 @@ export default function ActivityPage() {
   const [quantity, setQuantity] = useState(15)
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [successData, setSuccessData] = useState<{ activityType: string, quantity: number, totalCo2e: number, pointsAwarded: number } | null>(null)
 
   const currentDef = ACTIVITY_MULTIPLIERS[activityType]
@@ -18,8 +19,15 @@ export default function ActivityPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setIsSubmitting(true)
+    setErrorMsg(null)
     setSuccessData(null)
+
+    if (!quantity || quantity <= 0) {
+      setErrorMsg("Quantity must be greater than zero.")
+      return
+    }
+
+    setIsSubmitting(true)
 
     try {
       // Simulate slight network delay for emotional suspense
@@ -35,8 +43,12 @@ export default function ActivityPage() {
         })
         setQuantity(0)
       }
-    } catch (err: any) {
-      alert(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErrorMsg(err.message)
+      } else {
+        setErrorMsg("An unexpected error occurred.")
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -52,7 +64,7 @@ export default function ActivityPage() {
   }
 
   return (
-    <div className="relative min-h-screen">
+    <main className="relative min-h-screen">
       {successData && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           {/* Dimming Background */}
@@ -77,15 +89,15 @@ export default function ActivityPage() {
                 .footprint { animation: none; display: none; }
               }
             `}} />
-            {[...Array(successData.totalCo2e > 15 ? 24 : 12)].map((_, i) => (
+            {[...Array(successData.totalCo2e > 15 ? 24 : 12)].map((_, i, arr) => (
               <span 
                 key={i} 
                 className="material-symbols-outlined footprint" 
                 style={{
-                  left: `${Math.random() * 90 + 5}%`,
-                  animationDelay: `${Math.random() * 1.5}s`,
-                  animationDuration: `${Math.random() * 2 + 3}s`,
-                  transform: `scale(${Math.random() * 0.5 + 0.8})`
+                  left: `${5 + (i * (90 / arr.length))}%`,
+                  animationDelay: `${(i % 3) * 0.5}s`,
+                  animationDuration: `${3 + (i % 2)}s`,
+                  transform: `scale(${0.8 + ((i % 5) * 0.1)})`
                 }}
               >
                 footprint
@@ -95,8 +107,8 @@ export default function ActivityPage() {
 
           {/* Result Modal Content */}
           <div className={`relative z-10 w-full max-w-lg rounded-3xl p-8 shadow-2xl animate-[fadeIn_0.3s_ease-out] ${successData.totalCo2e > 15 ? 'bg-error text-white' : 'bg-surface-container-lowest text-on-surface'}`}>
-            <button onClick={closeResult} className={`absolute top-6 right-6 ${successData.totalCo2e > 15 ? 'text-white/70 hover:text-white' : 'text-on-surface-variant hover:text-on-surface'}`}>
-              <span className="material-symbols-outlined text-3xl">close</span>
+            <button aria-label="Close modal" onClick={closeResult} className={`absolute top-6 right-6 ${successData.totalCo2e > 15 ? 'text-white/70 hover:text-white' : 'text-on-surface-variant hover:text-on-surface'}`}>
+              <span className="material-symbols-outlined text-3xl" aria-hidden="true">close</span>
             </button>
 
             <div className="text-center space-y-6">
@@ -259,6 +271,13 @@ export default function ActivityPage() {
                 </div>
               </div>
 
+              {errorMsg && (
+                <div role="alert" className="p-4 rounded-xl bg-error/10 border border-error text-error text-sm font-bold flex items-center gap-2">
+                  <span className="material-symbols-outlined">error</span>
+                  {errorMsg}
+                </div>
+              )}
+
               {/* Submit Button */}
               <button 
                 type="submit" 
@@ -350,6 +369,6 @@ export default function ActivityPage() {
         </div>
       </div>
       </div>
-    </div>
+    </main>
   )
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import { TrendChart } from '@/components/charts/DashboardCharts'
 
@@ -20,7 +21,7 @@ export default function LandingPage() {
               Understand Your <span className="text-primary">Carbon Footprint</span>. Experience the Impact.
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
-              Every choice has a consequence. Track your daily actions across transport, diet, and lifestyle to see exactly how you shape the planet's future.
+              Every choice has a consequence. Track your daily actions across transport, diet, and lifestyle to see exactly how you shape the planet&apos;s future.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link href="/activity" className="bg-primary hover:bg-secondary text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-primary/20 transition-all text-center">

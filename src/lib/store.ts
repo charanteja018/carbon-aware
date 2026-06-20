@@ -68,7 +68,7 @@ const getDemoEmissions = (): EmissionLog[] => {
 
 export const useEmissionsStore = create<AppState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       emissions: getDemoEmissions(),
       profile: { green_score: 145 },
       logEmission: (activityType: string, quantity: number, dateStr: string) => {

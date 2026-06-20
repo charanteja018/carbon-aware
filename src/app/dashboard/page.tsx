@@ -13,6 +13,7 @@ function DashboardContent() {
   const [mounted, setMounted] = useState(false)
   
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
   }, [])
 
@@ -42,7 +43,7 @@ function DashboardContent() {
   const totalKg = filteredEmissions.reduce((sum, log) => sum + Number(log.amount_kg_co2), 0)
 
   // Calculate breakdown
-  const breakdown = filteredEmissions.reduce((acc: any, log) => {
+  const breakdown = filteredEmissions.reduce((acc: Record<string, number>, log) => {
     acc[log.category] = (acc[log.category] || 0) + Number(log.amount_kg_co2)
     return acc
   }, { Transport: 0, Food: 0, Electricity: 0, Purchases: 0 })
@@ -51,12 +52,14 @@ function DashboardContent() {
   const uniqueDates = Array.from(new Set(emissions.map((e) => e.logged_date))).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
   
   let currentStreak = 0;
+  // eslint-disable-next-line react-hooks/purity
   const today = new Date().toISOString().split('T')[0];
+  // eslint-disable-next-line react-hooks/purity
   const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
   
   if (uniqueDates.length > 0 && (uniqueDates[0] === today || uniqueDates[0] === yesterday)) {
     currentStreak = 1;
-    let expectedDate = new Date(uniqueDates[0]);
+    const expectedDate = new Date(uniqueDates[0]);
     for (let i = 1; i < uniqueDates.length; i++) {
       expectedDate.setDate(expectedDate.getDate() - 1);
       const expectedDateStr = expectedDate.toISOString().split('T')[0];
@@ -97,11 +100,11 @@ function DashboardContent() {
   const treesNeeded = Math.ceil(totalKg / 2) // Assuming 1 tree offsets ~2kg a week roughly for demo
 
   return (
-    <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
+    <main className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
       {/* Header Content */}
       <section className="space-y-2 max-w-2xl mx-auto text-center md:text-left md:mx-0">
         <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Live Carbon Tracker</h1>
-        <p className="font-body-md text-body-md text-on-surface-variant">Your actions shape the world. Review your recent impact and discover paths to improvement.</p>
+        <p className="font-body-md text-body-md text-on-surface-variant">Track your carbon footprint and actively reduce emissions to protect biodiversity and prevent severe climate tipping points.</p>
         <p className="text-xs font-bold text-on-surface-variant opacity-70 flex items-center gap-1 mt-1">
           <span className="material-symbols-outlined text-[14px]">verified</span> Data Verified: {DATA_LAST_UPDATED} (EPA/IPCC Standards)
         </p>
@@ -178,7 +181,7 @@ function DashboardContent() {
                     </p>
                     <div className="bg-surface-container-lowest/10 p-4 rounded-xl border border-surface-bright/20 mt-2 backdrop-blur-sm">
                       <p className="font-body-md font-bold text-surface-bright mb-1 flex items-center gap-2"><span className="material-symbols-outlined">psychology</span> Coach Recommendation:</p>
-                      <p className="text-primary-fixed">To reach "Low" severity and achieve net-zero, try replacing two car trips with biking or adopting a fully plant-based diet for the remainder of the week.</p>
+                      <p className="text-primary-fixed">To reach &quot;Low&quot; severity and achieve net-zero, try replacing two car trips with biking or adopting a fully plant-based diet for the remainder of the week.</p>
                     </div>
                   </>
                 )}
@@ -271,7 +274,7 @@ function DashboardContent() {
           </section>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
 

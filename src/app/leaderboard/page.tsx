@@ -4,23 +4,14 @@ import { useEmissionsStore } from '@/lib/store'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-const STATIC_LEADERS = [
-  { id: '1', display_name: 'EcoWarrior99', green_score: 3420 },
-  { id: '2', display_name: 'SarahTheGreen', green_score: 2850 },
-  { id: '3', display_name: 'PlanetSaver', green_score: 2100 },
-  { id: '4', display_name: 'AlexV', green_score: 1840 },
-  { id: '5', display_name: 'TreeHugger', green_score: 1560 },
-  { id: '6', display_name: 'ClimateHero', green_score: 1200 },
-  { id: '7', display_name: 'GreenLife', green_score: 950 },
-  { id: '8', display_name: 'EarthFirst', green_score: 640 },
-  { id: '9', display_name: 'CarbonNinja', green_score: 410 },
-]
+
 
 export default function LeaderboardPage() {
   const { profile } = useEmissionsStore()
   const [mounted, setMounted] = useState(false)
   
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
   }, [])
 
@@ -110,7 +101,7 @@ export default function LeaderboardPage() {
       <section className="bg-surface-container-lowest rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 overflow-hidden min-h-[100px] flex items-center justify-center">
         {rest.length === 0 ? (
           <div className="p-8 text-center text-on-surface-variant">
-            <p className="font-bold text-lg mb-2">It's lonely at the top!</p>
+            <p className="font-bold text-lg mb-2">It&apos;s lonely at the top!</p>
             <p>Invite your friends to compete for a sustainable future.</p>
           </div>
         ) : (

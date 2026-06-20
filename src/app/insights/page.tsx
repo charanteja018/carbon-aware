@@ -10,6 +10,7 @@ export default function InsightsPage() {
   const [mounted, setMounted] = useState(false)
   
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
   }, [])
 
@@ -20,7 +21,7 @@ export default function InsightsPage() {
   )
 
   const totalKg = emissions.reduce((sum, log) => sum + Number(log.amount_kg_co2), 0)
-  const breakdown = emissions.reduce((acc: any, log) => {
+  const breakdown = emissions.reduce((acc: Record<string, number>, log) => {
     acc[log.category] = (acc[log.category] || 0) + Number(log.amount_kg_co2)
     return acc
   }, { Transport: 0, Food: 0, Electricity: 0, Purchases: 0 })
@@ -53,7 +54,7 @@ export default function InsightsPage() {
   const trendData = Array.from(trendDataMap.entries()).map(([name, kg]) => ({ name, kg }))
 
   return (
-    <div className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
+    <main className="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
       <section className="text-center md:text-left">
         <h1 className="font-headline-xl text-headline-xl text-primary mb-2">Deep Insights</h1>
         <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
@@ -107,7 +108,7 @@ export default function InsightsPage() {
             </div>
             
             <p className="font-label-sm text-on-surface-variant p-4 bg-surface-container-low rounded-xl italic border-l-2 border-primary">
-              "Every peak in this chart represents real environmental cost. Pay attention to sudden spikes in your emissions."
+              &quot;Every peak in this chart represents real environmental cost. Pay attention to sudden spikes in your emissions.&quot;
             </p>
           </section>
 
@@ -141,6 +142,6 @@ export default function InsightsPage() {
           </section>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
