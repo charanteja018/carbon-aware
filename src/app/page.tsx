@@ -32,7 +32,7 @@ export default function LandingPage() {
               </Link>
             </div>
           </div>
-          <div className="relative group">
+          <div className="relative group" suppressHydrationWarning>
             <div className="absolute -inset-4 bg-error/20 blur-3xl rounded-full opacity-50 group-hover:opacity-70 transition-opacity"></div>
             <img 
               alt="Sustainability Illustration" 

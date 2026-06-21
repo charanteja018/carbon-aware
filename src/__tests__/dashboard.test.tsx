@@ -4,6 +4,7 @@ import DashboardPage from '@/app/dashboard/page';
 import { useEmissionsStore } from '@/lib/store';
 
 // Mock Next.js routing hooks
+import { useSearchParams } from 'next/navigation';
 jest.mock('next/navigation', () => ({
   useSearchParams: jest.fn(() => new URLSearchParams('')),
 }));
@@ -122,22 +123,20 @@ describe('Dashboard Math and Edge Cases', () => {
   });
 
   it('handles week, month, and year filters', () => {
-    const { useSearchParams } = require('next/navigation');
-    
     // Test Month
-    useSearchParams.mockReturnValue(new URLSearchParams('?filter=month'));
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('?filter=month'));
     const { unmount } = render(<DashboardPage />);
     expect(screen.getByText('Live Carbon Tracker')).toBeInTheDocument();
     unmount();
 
     // Test Year
-    useSearchParams.mockReturnValue(new URLSearchParams('?filter=year'));
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('?filter=year'));
     const { unmount: unmountYear } = render(<DashboardPage />);
     expect(screen.getByText('Live Carbon Tracker')).toBeInTheDocument();
     unmountYear();
 
     // Test Week
-    useSearchParams.mockReturnValue(new URLSearchParams('?filter=week'));
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('?filter=week'));
     render(<DashboardPage />);
     expect(screen.getByText('Live Carbon Tracker')).toBeInTheDocument();
   });

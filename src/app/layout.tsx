@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 
+import AIAssistant from "../components/AIAssistant";
+
 export const metadata: Metadata = {
   title: "Carbon Aware | Environmental Tracking",
   description: "A comprehensive carbon footprint tracker designed to help individuals calculate, monitor, and reduce their environmental impact to support global biodiversity and climate action.",
@@ -46,6 +48,8 @@ export default function RootLayout({
         <main className="flex-grow pt-20">
           {children}
         </main>
+
+        <AIAssistant />
 
         {/* Footer */}
         <footer className="bg-surface-container-low w-full mt-auto border-t border-outline-variant/30">
