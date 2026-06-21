@@ -1,0 +1,42 @@
+name: CarbonAware CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+        
+    - name: Install Dependencies
+      run: npm ci
+      
+    - name: Run Linters
+      run: npm run lint
+      
+    - name: Run Type Checking
+      run: npx tsc --noEmit
+      
+    - name: Run Jest Unit Tests
+      run: npm test -- --coverage
+      
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium
+      
+    - name: Run Playwright E2E Tests
+      run: npm run e2e
+      
+    - name: Build Next.js Application
+      run: npm run build
