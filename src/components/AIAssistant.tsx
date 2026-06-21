@@ -46,7 +46,7 @@ export default function AIAssistant() {
   const totalCo2 = emissions.reduce((acc, curr) => acc + curr.amount_kg_co2, 0);
 
   useEffect(() => {
-    setMounted(true);
+    setTimeout(() => setMounted(true), 0);
   }, []);
 
   useEffect(() => {
