@@ -91,7 +91,7 @@ Keep your answers brief, encouraging, and highly specific to their carbon footpr
       setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
     } catch (err) {
       console.error(err);
-      setMessages(prev => [...prev, { role: 'assistant', content: "Oops, I'm having trouble connecting to my AI brain (Ollama). Make sure Ollama is running locally!" }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Oops, I'm having trouble connecting to my AI brain (Groq API). Make sure the API key is valid!" }]);
     } finally {
       setIsTyping(false);
     }
@@ -112,7 +112,7 @@ Keep your answers brief, encouraging, and highly specific to their carbon footpr
                 <h3 className="font-bold text-lg leading-tight">Carbon Coach</h3>
                 <p className="text-xs opacity-80 flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                  Ollama Llama 3
+                  Groq Llama 3
                 </p>
               </div>
             </div>
