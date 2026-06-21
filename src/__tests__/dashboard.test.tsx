@@ -5,7 +5,7 @@ import { useEmissionsStore } from '@/lib/store';
 
 // Mock Next.js routing hooks
 jest.mock('next/navigation', () => ({
-  useSearchParams: () => new URLSearchParams(''),
+  useSearchParams: jest.fn(() => new URLSearchParams('')),
 }));
 
 // Mock Recharts to avoid testing SVG/DOM rendering complexity
@@ -121,11 +121,23 @@ describe('Dashboard Math and Edge Cases', () => {
     expect(screen.getByText('Critical Severity')).toBeInTheDocument();
   });
 
-  it('handles month and year filters', () => {
-    jest.mock('next/navigation', () => ({
-      useSearchParams: () => new URLSearchParams('?filter=month'),
-    }));
+  it('handles week, month, and year filters', () => {
+    const { useSearchParams } = require('next/navigation');
     
+    // Test Month
+    useSearchParams.mockReturnValue(new URLSearchParams('?filter=month'));
+    const { unmount } = render(<DashboardPage />);
+    expect(screen.getByText('Live Carbon Tracker')).toBeInTheDocument();
+    unmount();
+
+    // Test Year
+    useSearchParams.mockReturnValue(new URLSearchParams('?filter=year'));
+    const { unmount: unmountYear } = render(<DashboardPage />);
+    expect(screen.getByText('Live Carbon Tracker')).toBeInTheDocument();
+    unmountYear();
+
+    // Test Week
+    useSearchParams.mockReturnValue(new URLSearchParams('?filter=week'));
     render(<DashboardPage />);
     expect(screen.getByText('Live Carbon Tracker')).toBeInTheDocument();
   });

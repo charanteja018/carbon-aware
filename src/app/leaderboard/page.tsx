@@ -24,6 +24,11 @@ export default function LeaderboardPage() {
   const userScore = profile?.green_score && Number.isFinite(profile.green_score) ? profile.green_score : 0
   
   const allLeaders = [
+    { id: '1', display_name: 'EcoWarrior', green_score: 150 },
+    { id: '2', display_name: 'PlanetSaver', green_score: 120 },
+    { id: '3', display_name: 'GreenGuru', green_score: 95 },
+    { id: '4', display_name: 'EarthLover', green_score: 80 },
+    { id: '5', display_name: 'NatureHero', green_score: 60 },
     { id: 'me', display_name: 'You', green_score: userScore }
   ].sort((a, b) => b.green_score - a.green_score)
 
