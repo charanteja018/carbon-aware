@@ -254,8 +254,8 @@ function DashboardContent() {
                   <p>No activities logged yet.</p>
                 </div>
               ) : (
-                emissions.slice(0, 10).map((log) => (
-                  <div key={log.id} className="p-4 flex items-center gap-4 hover:bg-surface-container-lowest/80 transition-colors group">
+                emissions.slice(0, 10).map((log, index) => (
+                  <div key={`${log.id}-${index}`} className="p-4 flex items-center gap-4 hover:bg-surface-container-lowest/80 transition-colors group">
                     <div className="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                       <span className="material-symbols-outlined text-primary">
                         {log.category === 'Transport' ? 'directions_bus' : log.category === 'Food' ? 'restaurant' : log.category === 'Purchases' ? 'shopping_bag' : 'bolt'}
