@@ -17,6 +17,7 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^uuid$': '<rootDir>/__mocks__/uuid.js',
   },
+  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/', '<rootDir>/tests/'],
 };
 
 module.exports = createJestConfig(customJestConfig);

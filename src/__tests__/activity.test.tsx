@@ -60,4 +60,71 @@ describe('Activity Page', () => {
     expect(useEmissionsStore.getState().emissions.length).toBe(1);
     expect(useEmissionsStore.getState().emissions[0].amount_kg_co2).toBeGreaterThan(0);
   });
+  it('switches to Diet category and calculates impact', () => {
+    render(<ActivityPage />);
+    
+    // Switch to Diet
+    fireEvent.click(screen.getByText('Diet', { selector: 'span' }));
+    
+    // Check that select options updated
+    expect(screen.getAllByText('Vegetarian Meal')[0]).toBeInTheDocument();
+    
+    const quantityInput = screen.getByPlaceholderText(/e.g. 15/i);
+    fireEvent.change(quantityInput, { target: { value: '2' } });
+    
+    // 2 * 1.2 = 2.4
+    expect(screen.getByText(/2.4/i)).toBeInTheDocument();
+  });
+
+  it('switches to Energy category and calculates impact', () => {
+    render(<ActivityPage />);
+    
+    // Switch to Energy
+    fireEvent.click(screen.getByText('Energy', { selector: 'span' }));
+    
+    // Check that select options updated
+    expect(screen.getAllByText('Air Conditioning')[0]).toBeInTheDocument();
+    
+    const quantityInput = screen.getByPlaceholderText(/e.g. 15/i);
+    fireEvent.change(quantityInput, { target: { value: '5' } });
+    
+    // 5 * 1.1 = 5.5
+    expect(screen.getByText(/5.5/i)).toBeInTheDocument();
+  });
+
+  it('switches to Shopping category and calculates impact', () => {
+    render(<ActivityPage />);
+    
+    // Switch to Shopping
+    fireEvent.click(screen.getByText('Shopping', { selector: 'span' }));
+    
+    // Check that select options updated
+    expect(screen.getAllByText('Electronics')[0]).toBeInTheDocument();
+    
+    const quantityInput = screen.getByPlaceholderText(/e.g. 15/i);
+    fireEvent.change(quantityInput, { target: { value: '1' } });
+    
+    // 1 * 50 = 50.0 or 1 * 15 (if clothing is default)
+    // Actually Clothing is default for Shopping: 15.0 * 1 = 15.0
+    expect(screen.getByText(/15.0/i)).toBeInTheDocument();
+  });
+
+  it('handles Quick Add buttons correctly', () => {
+    render(<ActivityPage />);
+    
+    // Quick Add Bus
+    fireEvent.click(screen.getByText('Daily Commute (Bus)', { selector: 'p' }));
+    // 10 miles * 0.16 = 1.6
+    expect(screen.getByText(/1.6/i)).toBeInTheDocument();
+
+    // Quick Add Vegetarian Meal
+    fireEvent.click(screen.getByText('Vegetarian Meal', { selector: 'p' }));
+    // 1 serving * 1.2 = 1.2
+    expect(screen.getByText(/1.2/i)).toBeInTheDocument();
+
+    // Quick Add Air Conditioning
+    fireEvent.click(screen.getByText('Air Conditioning', { selector: 'p' }));
+    // 4 hours * 1.1 = 4.4
+    expect(screen.getByText(/4.4/i)).toBeInTheDocument();
+  });
 });

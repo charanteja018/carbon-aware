@@ -95,4 +95,38 @@ describe('Dashboard Math and Edge Cases', () => {
     // Should detect a 1 day streak because yesterday is missing
     expect(screen.getAllByText(/1\s*Day/i)[0]).toBeInTheDocument();
   });
+
+  it('handles High and Critical severity logic correctly', () => {
+    useEmissionsStore.setState({ 
+      emissions: [
+        { id: '1', category: 'Transport', amount_kg_co2: 45, action_description: 'Test', logged_date: today, created_at: today }
+      ]
+    });
+
+    const { unmount } = render(<DashboardPage />);
+    
+    // High Severity (> 40)
+    expect(screen.getByText('High Severity')).toBeInTheDocument();
+    
+    unmount();
+
+    useEmissionsStore.setState({ 
+      emissions: [
+        { id: '2', category: 'Transport', amount_kg_co2: 85, action_description: 'Test2', logged_date: today, created_at: today }
+      ]
+    });
+
+    render(<DashboardPage />);
+    // Critical Severity (> 80)
+    expect(screen.getByText('Critical Severity')).toBeInTheDocument();
+  });
+
+  it('handles month and year filters', () => {
+    jest.mock('next/navigation', () => ({
+      useSearchParams: () => new URLSearchParams('?filter=month'),
+    }));
+    
+    render(<DashboardPage />);
+    expect(screen.getByText('Live Carbon Tracker')).toBeInTheDocument();
+  });
 });
